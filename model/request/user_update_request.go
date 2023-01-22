@@ -5,8 +5,11 @@ type UserUpdateRequest struct {
 	Email    string `json:"email,omitempty" `
 	Phone    string `json:"phone,omitempty" `
 	Photo    string `json:"photo,omitempty" `
+	Age      int    `json:"age,omitempty" `
+	Address  string `json:"address,omitempty" db:"address, omitempty"`
+
 	FullName string `json:"full_name,omitempty"`
 	Password string `json:"password,omitempty"`
-	Status   string `json:"status,omitempty" `
+	Status   int    `json:"status,omitempty" `
 	Role     string `json:"role,omitempty" `
 }

@@ -28,11 +28,11 @@ func (s *Sql) Connect() {
 	var err error
 
 	s.Db, err = sqlx.Connect("postgres", dbinfo)
-
-	/* gormDB, _ := gorm.Open(postgres.New(postgres.Config{
-		Conn: s.Db,
-	}), &gorm.Config{})
-	Migratsion(gormDB) */
+	/*
+		gormDB, _ := gorm.Open(postgres.New(postgres.Config{
+			Conn: s.Db,
+		}), &gorm.Config{})
+		Migratsion(gormDB) */
 
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
@@ -65,9 +65,13 @@ func Migratsion(s *gorm.DB) {
 	/* s.Migrator().DropTable(model.Province{})
 	s.Migrator().DropTable(model.Schedule{})
 	s.Migrator().DropTable(model.Region{}) */
-	s.Migrator().DropTable(model.User{})
+	/* s.Migrator().DropTable(model.User{})
+	s.Migrator().DropTable(model.Permission{})
+	s.Migrator().DropTable("user_role")
+	s.Migrator().DropTable(model.Role{})
+	*/
 	s.AutoMigrate(model.User{})
-	//s.AutoMigrate(model.Region{})
+	s.AutoMigrate(model.Permission{})
 
 }
 

@@ -22,5 +22,6 @@ func (api *API) SetupRouter() {
 	user.POST("/signup", api.UserController.Signup)
 	user.POST("/signin", api.UserController.Login)
 	user.POST("/update", api.UserController.Update, middleware.JWTMiddleware())
+	user.POST("/update-role", api.UserController.UpdateRole, middleware.JWTMiddleware())
 
 }

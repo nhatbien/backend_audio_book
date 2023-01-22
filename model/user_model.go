@@ -4,17 +4,22 @@ import "time"
 
 type User struct {
 	Id        string    `json:"-" db:"id, omitempty"`
-	Username  string    `json:"username,omitempty" db:"username, omitempty" gorm:"uniqueIndex"`
-	Email     string    `json:"email,omitempty" db:"email, omitempty" gorm:"uniqueIndex"`
-	Phone     string    `json:"phone,omitempty" db:"phone, omitempty" gorm:"uniqueIndex"`
-	Photo     string    `json:"photo,omitempty" db:"photo, omitempty"`
-	FullName  string    `json:"full_name,omitempty" db:"full_name, omitempty"`
+	Username  string    `json:"username,omitempty" db:"username, omitempty" `
+	Email     string    `json:"email,omitempty" db:"email, omitempty" `
+	Phone     string    `json:"phone,omitempty" db:"phone, omitempty" `
 	Password  string    `json:"password,omitempty" db:"password, omitempty"`
-	Status    string    `json:"status,omitempty" db:"status, omitempty"`
-	Role      string    `json:"role,omitempty" db:"role, omitempty"`
+	FullName  string    `json:"full_name,omitempty" db:"full_name, omitempty"`
+	Age       int       `json:"age,omitempty" db:"age, omitempty"`
+	Address   string    `json:"address,omitempty" db:"address, omitempty"`
+	Photo     string    `json:"photo,omitempty" db:"photo, omitempty"`
+	Status    int       `json:"status,omitempty" db:"status, omitempty"`
+	RoleId    int       `json:"-" db:"role_id, omitempty"`
 	CreatedAt time.Time `json:"-" db:"created_at, omitempty"`
 	UpdatedAt time.Time `json:"-" db:"updated_at, omitempty"`
-	Token     string    `json:"token" db:"-, omitempty" gorm:"-:migration"`
+
+	Role Role `json:"role"`
+
+	Token string `json:"token" db:"-, omitempty" `
 }
 
 type Error struct {

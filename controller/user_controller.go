@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"backend/biedeptrai"
 	"backend/log"
 	"backend/model"
 	"backend/model/request"
@@ -40,7 +41,7 @@ func (u *UserController) Signup(c echo.Context) error {
 
 	hash := security.HashAndSalt([]byte(request.Password))
 	//role := model.MEMBER.String()
-	role := model.ADMIN.String()
+	//role := model.ADMIN.String()
 	userId, err := uuid.NewUUID()
 	if err != nil {
 		return c.JSON(http.StatusForbidden, model.Response{
@@ -57,8 +58,10 @@ func (u *UserController) Signup(c echo.Context) error {
 		Photo:     request.Photo,
 		Email:     request.Email,
 		Username:  request.Username,
+		Age:       request.Age,
+		Address:   request.Address,
 		Password:  hash,
-		Role:      role,
+		RoleId:    1,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -161,11 +164,12 @@ func (u *UserController) Update(c echo.Context) error {
 		Photo:     request.Photo,
 		FullName:  request.FullName,
 		Status:    request.Status,
-		Role:      request.Role,
+		Age:       request.Age,
+		Address:   request.Address,
 		UpdatedAt: time.Now(),
 	}
 
-	user, err := u.UserRepo.UpdateUser(c.Request().Context(), user)
+	err := u.UserRepo.UpdateUser(c.Request().Context(), user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  http.StatusBadRequest,
@@ -175,6 +179,47 @@ func (u *UserController) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  http.StatusOK,
 		Message: "Lưu thành công",
-		Data:    user,
+	})
+}
+
+func (u *UserController) UpdateRole(c echo.Context) error {
+	request := request.UserUpdateRoleRequest{}
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+
+	if claims.Role.RoleName != "ADMIN" {
+		return c.JSON(http.StatusNotFound, model.Response{
+			Status:  http.StatusNotFound,
+			Message: biedeptrai.ErrorRoleUser.Error(),
+			Data:    nil,
+		})
+	}
+
+	if err := c.Bind(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	if err := c.Validate(request); err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	err := u.UserRepo.UpdateRole(c.Request().Context(), request)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  http.StatusBadRequest,
+			Message: err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  http.StatusOK,
+		Message: "Lưu thành công",
 	})
 }
