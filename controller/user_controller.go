@@ -100,7 +100,7 @@ func (u *UserController) Login(c echo.Context) error {
 		})
 	}
 
-	user, err := u.UserRepo.CheckLogin(c.Request().Context(), request)
+	user, err := u.UserRepo.Login(c.Request().Context(), request)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, model.Response{
 			Status:  http.StatusUnauthorized,
@@ -169,7 +169,7 @@ func (u *UserController) Update(c echo.Context) error {
 		UpdatedAt: time.Now(),
 	}
 
-	err := u.UserRepo.UpdateUser(c.Request().Context(), user)
+	_, err := u.UserRepo.UpdateUser(c.Request().Context(), user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  http.StatusBadRequest,
@@ -211,13 +211,13 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 		})
 	}
 
-	err := u.UserRepo.UpdateRole(c.Request().Context(), request)
+	/* err := u.UserRepo.UpdateRole(c.Request().Context(), request)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  http.StatusBadRequest,
 			Message: err.Error(),
 		})
-	}
+	} */
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  http.StatusOK,
 		Message: "Lưu thành công",

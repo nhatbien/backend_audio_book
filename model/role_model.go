@@ -1,6 +1,6 @@
 package model
 
-/*
+/*=
 type Role int
 
 const (
@@ -13,9 +13,9 @@ func (r Role) String() string {
 }
 */
 type Role struct {
-	Id          uint   `json:"-" db:"id, omitempty"`
-	RoleName    string `json:"role_name,omitempty" db:"role_name, omitempty" gorm:"uniqueIndex"`
-	Description string `json:"role_description,omitempty" db:"role_description, omitempty" gorm:"uniqueIndex"`
+	Id          uint64 `gorm:"primaryKey;autoIncrement"`
+	RoleName    string `json:"role_name,omitempty"  gorm:"size:255;uniqueIndex"`
+	Description string `json:"role_description,omitempty" `
 }
 
 type Permission struct {

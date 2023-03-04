@@ -4,17 +4,19 @@ import (
 	"backend/model"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 
 	"os"
 )
 
 type Sql struct {
-	Db       *sqlx.DB
+	Db       *gorm.DB
 	Host     string
 	Port     string
 	User     string
@@ -23,41 +25,41 @@ type Sql struct {
 }
 
 func (s *Sql) Connect() {
-	dbinfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", s.Host, s.Port, s.User, s.Password, s.Dbname)
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", s.User, s.Password, s.Host, s.Port, s.Dbname)
 
 	var err error
 
-	s.Db, err = sqlx.Connect("postgres", dbinfo)
-	/*
-		gormDB, _ := gorm.Open(postgres.New(postgres.Config{
-			Conn: s.Db,
-		}), &gorm.Config{})
-		Migratsion(gormDB) */
+	s.Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 
 	if err != nil {
 		log.Fatal("Failed to connect to database. \n", err)
 		os.Exit(2)
 
 	}
-	s.Db.SetMaxIdleConns(3)
-	s.Db.SetMaxOpenConns(3)
-	s.Db.SetConnMaxLifetime(0)
-
-	/* 	result, err := db.Exec(
-	   		`INSERT INTO users (id , username, email) VALUES ($1 , $2 , $3)`,
-	   		"gopher",
-	   		"gopher",
-	   		"gopher",
-	   	)
-	   	fmt.Println(result)
-	*/
-	if err != nil {
-		panic(err)
-	}
 
 	//defer db.Close()
+	sqlDB, err := s.Db.DB()
 
+	if err != nil {
+		log.Fatal("Failed database. \n", err)
+		os.Exit(2)
+
+	}
+	// SetMaxIdleConns sets the maximum number of connections in the idle connection pool.
+	sqlDB.SetMaxIdleConns(10)
+
+	// SetMaxOpenConns sets the maximum number of open connections to the database.
+	sqlDB.SetMaxOpenConns(100)
+
+	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
+	sqlDB.SetConnMaxLifetime(time.Hour)
 	fmt.Println("Connect ok")
+	//Migratsion(s.Db)
+
+	//defer sqlDB.Close()
 }
 
 func Migratsion(s *gorm.DB) {
@@ -70,11 +72,27 @@ func Migratsion(s *gorm.DB) {
 	s.Migrator().DropTable("user_role")
 	s.Migrator().DropTable(model.Role{})
 	*/
-	s.AutoMigrate(model.User{})
-	s.AutoMigrate(model.Permission{})
+	s.Migrator().DropTable(model.Role{})
+	s.Migrator().DropTable(model.User{})
 
+	s.AutoMigrate(model.Role{})
+	s.AutoMigrate(model.User{})
+
+	//s.AutoMigrate(model.Permission{})
+	initDataRole(s)
 }
 
-func (s *Sql) Close() {
-	s.Db.Close()
+func initDataRole(s *gorm.DB) {
+
+	role := model.Role{
+		RoleName:    "admin",
+		Description: "admin",
+	}
+	role2 := model.Role{
+		RoleName:    "user",
+		Description: "user",
+	}
+	s.Create(&role)
+	s.Create(&role2)
+
 }

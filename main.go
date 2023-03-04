@@ -4,7 +4,7 @@ import (
 	"backend/controller"
 	"backend/db"
 	"backend/helper"
-	"backend/repository/repository_impl"
+	"backend/repository/repo_impl"
 	"backend/router"
 
 	"github.com/labstack/echo/v4"
@@ -15,10 +15,10 @@ func main() {
 
 	sql := &db.Sql{
 		Host:     "localhost",
-		Port:     "5432",
-		User:     "postgres",
-		Password: "pjpjmn01",
-		Dbname:   "backend_grab",
+		Port:     "3306",
+		User:     "roadside_assistance",
+		Password: "KhongPhaiLaMatKhau123456@",
+		Dbname:   "roadside_assistance",
 	}
 	sql.Connect()
 	e := echo.New()
@@ -29,7 +29,7 @@ func main() {
 	e.Validator = structValidator
 
 	userController := controller.UserController{
-		UserRepo: repository_impl.NewUserRepo(sql)}
+		UserRepo: repo_impl.NewUserRepo(sql)}
 
 	api := router.API{
 		Echo:           e,
@@ -39,6 +39,6 @@ func main() {
 	api.SetupRouter()
 
 	e.Logger.Fatal(e.Start(":3001"))
-	defer sql.Close()
+	//	defer sql.Close()
 
 }
