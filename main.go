@@ -16,9 +16,9 @@ func main() {
 	sql := &db.Sql{
 		Host:     "localhost",
 		Port:     "3306",
-		User:     "roadside_assistance",
-		Password: "KhongPhaiLaMatKhau123456@",
-		Dbname:   "roadside_assistance",
+		User:     "audio_book",
+		Password: "nhutkhung123",
+		Dbname:   "audio_book",
 	}
 	sql.Connect()
 	e := echo.New()
