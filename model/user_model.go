@@ -13,11 +13,11 @@ type User struct {
 	Address   string    `json:"address,omitempty" `
 	Photo     string    `json:"photo,omitempty" `
 	Status    int       `json:"status,omitempty" `
-	RoleId    int       `json:"-"   `
-	CreatedAt time.Time `json:"-" gorm:"autoCreateTime"`
-	UpdatedAt time.Time `json:"-" gorm:"autoCreateTime"`
-	Role      Role      `json:"role"`
-	Token     string    `json:"token"  gorm:"-"`
+	RoleId    int       `json:"role_id,omitempty"   `
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	Role      Role      `json:"role,omitempty" gorm:"foreignKey:RoleId"`
+	Token     string    `json:"token,omitempty"  gorm:"-"`
 }
 
 type Error struct {

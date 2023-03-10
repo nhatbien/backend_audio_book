@@ -59,18 +59,30 @@ func (n *UserRepoImpl) SelectUserId(context context.Context, userId string) (mod
 }
 
 func (n *UserRepoImpl) UpdateUser(context context.Context, user model.User) (model.User, error) {
-	user.UpdatedAt = time.Now()
+	userModel := model.User{}
 
 	if res := n.sql.Db.Where(
 		&model.User{Id: user.Id},
-	).Save(&user); res.RowsAffected <= 0 {
+	).First(&userModel); res.RowsAffected <= 0 {
 		return user, biedeptrai.ErrorUserNotFound
+	}
+	userModel.FullName = user.FullName
+	userModel.Phone = user.Phone
+	userModel.Photo = user.Photo
+	userModel.Email = user.Email
+	userModel.Username = user.Username
+	userModel.Age = user.Age
+	userModel.Address = user.Address
+	userModel.UpdatedAt = time.Now()
+
+	if res := n.sql.Db.Save(&userModel).Error; res != nil {
+		return user, res
+
 	}
 
 	return user, nil
 
 }
-
 func (n *UserRepoImpl) UpdateRole(context context.Context, userRole request.UserUpdateRoleRequest) error {
 	user := model.User{
 		Id:     userRole.UserId,
