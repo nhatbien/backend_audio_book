@@ -112,8 +112,8 @@ func (u *UserController) Login(c echo.Context) error {
 	isTheSame := security.ComparePasswords(user.Password, []byte(request.Password))
 
 	if !isTheSame {
-		return c.JSON(http.StatusOK, model.Response{
-			Status:  http.StatusOK,
+		return c.JSON(http.StatusUnauthorized, model.Response{
+			Status:  http.StatusUnauthorized,
 			Message: "Đăng nhậP thất bại",
 			Data:    nil,
 		})
