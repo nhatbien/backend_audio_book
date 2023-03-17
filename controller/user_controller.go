@@ -131,7 +131,11 @@ func (u *UserController) Login(c echo.Context) error {
 	}
 	user.Token = token
 
-	return c.JSON(http.StatusOK, user)
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Đăng nhập thành công",
+		Data:    user,
+	})
 }
 
 func (u *UserController) Update(c echo.Context) error {
