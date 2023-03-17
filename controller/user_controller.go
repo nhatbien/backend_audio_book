@@ -25,7 +25,7 @@ func (u *UserController) Signup(c echo.Context) error {
 
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -33,7 +33,7 @@ func (u *UserController) Signup(c echo.Context) error {
 
 	if err := c.Validate(request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -45,7 +45,7 @@ func (u *UserController) Signup(c echo.Context) error {
 	userId, err := uuid.NewUUID()
 	if err != nil {
 		return c.JSON(http.StatusForbidden, model.Response{
-			Status:  http.StatusForbidden,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -69,14 +69,14 @@ func (u *UserController) Signup(c echo.Context) error {
 
 	if err != nil {
 		return c.JSON(http.StatusConflict, model.Response{
-			Status:  http.StatusConflict,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
 	}
 
 	return c.JSON(http.StatusOK, model.Response{
-		Status:  http.StatusOK,
+		Status:  false,
 		Message: "Đăng ký thành công",
 		Data:    user,
 	})
@@ -86,7 +86,7 @@ func (u *UserController) Login(c echo.Context) error {
 	request := request.UserLoginRequest{}
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -94,7 +94,7 @@ func (u *UserController) Login(c echo.Context) error {
 
 	if err := c.Validate(request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -103,7 +103,7 @@ func (u *UserController) Login(c echo.Context) error {
 	user, err := u.UserRepo.Login(c.Request().Context(), request)
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, model.Response{
-			Status:  http.StatusUnauthorized,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -113,7 +113,7 @@ func (u *UserController) Login(c echo.Context) error {
 
 	if !isTheSame {
 		return c.JSON(http.StatusUnauthorized, model.Response{
-			Status:  http.StatusUnauthorized,
+			Status:  false,
 			Message: "Đăng nhậP thất bại",
 			Data:    nil,
 		})
@@ -124,7 +124,7 @@ func (u *UserController) Login(c echo.Context) error {
 	if err != nil {
 		log.Error(err)
 		return c.JSON(http.StatusInternalServerError, model.Response{
-			Status:  http.StatusInternalServerError,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -139,7 +139,7 @@ func (u *UserController) Update(c echo.Context) error {
 
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -147,7 +147,7 @@ func (u *UserController) Update(c echo.Context) error {
 
 	if err := c.Validate(request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -172,12 +172,12 @@ func (u *UserController) Update(c echo.Context) error {
 	_, err := u.UserRepo.UpdateUser(c.Request().Context(), user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 		})
 	}
 	return c.JSON(http.StatusOK, model.Response{
-		Status:  http.StatusOK,
+		Status:  true,
 		Message: "Lưu thành công",
 	})
 }
@@ -189,7 +189,7 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 
 	if claims.Role.RoleName != "ADMIN" {
 		return c.JSON(http.StatusNotFound, model.Response{
-			Status:  http.StatusNotFound,
+			Status:  false,
 			Message: biedeptrai.ErrorRoleUser.Error(),
 			Data:    nil,
 		})
@@ -197,7 +197,7 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -205,7 +205,7 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 
 	if err := c.Validate(request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 			Data:    nil,
 		})
@@ -214,12 +214,12 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 	/* err := u.UserRepo.UpdateRole(c.Request().Context(), request)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
-			Status:  http.StatusBadRequest,
+			Status:  false,
 			Message: err.Error(),
 		})
 	} */
 	return c.JSON(http.StatusOK, model.Response{
-		Status:  http.StatusOK,
+		Status:  true,
 		Message: "Lưu thành công",
 	})
 }
