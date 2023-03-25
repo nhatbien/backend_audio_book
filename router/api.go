@@ -30,6 +30,6 @@ func (api *API) SetupRouter() {
 	categoryBook.POST("/save", api.CategoryBookController.SaveCategoryBook, middleware.JWTMiddleware())
 
 	///pi.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
-	url := echoSwagger.URL("http://localhost:1323/swagger/doc.json") //The url pointing to API definition
+	url := echoSwagger.URL("https://nhatbien.github.io/doc.json") //The url pointing to API definition
 	api.Echo.GET("/swagger/*", echoSwagger.EchoWrapHandler(url))
 }
