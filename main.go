@@ -17,7 +17,7 @@ func main() {
 		Host:     "localhost",
 		Port:     "3306",
 		User:     "audio_book",
-		Password: "nhutkhung123",
+		Password: "Nhutkhung123@",
 		Dbname:   "audio_book",
 	}
 	sql.Connect()
@@ -30,10 +30,13 @@ func main() {
 
 	userController := controller.UserController{
 		UserRepo: repo_impl.NewUserRepo(sql)}
+	categoryBookController := controller.CategoryBookController{
+		CategoryBookRepo: repo_impl.NewCategoryBookRepo(sql)}
 
 	api := router.API{
-		Echo:           e,
-		UserController: userController,
+		Echo:                   e,
+		UserController:         userController,
+		CategoryBookController: categoryBookController,
 	}
 
 	api.SetupRouter()

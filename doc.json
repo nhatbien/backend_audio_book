@@ -1,0 +1,307 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Title",
+    "version": "1.0"
+  },
+  "host": "localhost:3001",
+  "basePath": "/api/v1",
+  "schemes": ["https", "http"],
+
+  "paths": {
+    "/user/signup": {
+      "post": {
+        "summary": "Logout",
+        "tags": ["Auth"],
+        "description": "",
+        "operationId": "signup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/signin": {
+      "post": {
+        "summary": "Login",
+
+        "tags": ["Auth"],
+
+        "description": "login",
+        "operationId": "login",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseUser"
+            }
+          }
+        }
+      }
+    },
+    "/user/update": {
+      "post": {
+        "summary": "Update Profile",
+
+        "tags": ["Auth"],
+
+        "description": "userupdate",
+        "operationId": "userupdate",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Signup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseUser"
+            }
+          }
+        }
+      }
+    },
+    "/user/category-book/save": {
+      "post": {
+        "summary": "Save Category Book",
+
+        "tags": ["Category Book"],
+
+        "description": "saveCategoryBook",
+        "operationId": "saveCategoryBook",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestSaveCategoryBook"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseDefault"
+            }
+          }
+        }
+      }
+    },
+    "/user/category-book/update": {
+      "post": {
+        "summary": "Update Category Book",
+
+        "tags": ["Category Book"],
+
+        "description": "updateCategoryBook",
+        "operationId": "updateCategoryBook",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Signup",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestSaveCategoryBook"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseDefault"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ResponseDefault": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "message": {
+          "type": "string",
+          "default": "OK"
+        },
+        "data": {
+          "type": "object",
+          "default": {}
+        }
+      }
+    },
+    "ResponseUser": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "message": {
+          "type": "string",
+          "default": "OK"
+        },
+        "data": {
+          "$ref": "#/definitions/User"
+        }
+      }
+    },
+    "Signup": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "default": "nguyenvana"
+        },
+        "password": {
+          "type": "string",
+          "default": "123456"
+        },
+        "phone": {
+          "type": "string",
+          "default": "0123456789"
+        },
+        "fullname": {
+          "type": "string",
+          "default": "Nguyen Van A"
+        },
+        "age": {
+          "type": "integer",
+          "default": 23
+        }
+      }
+    },
+    "Signin": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "default": "nguyenvana"
+        },
+        "password": {
+          "type": "string",
+          "default": "123456"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "role_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "role": {
+          "type": "object",
+          "properties": {
+            "Id": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "role_name": {
+              "type": "string"
+            },
+            "role_description": {
+              "type": "string"
+            }
+          }
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "RequestSaveCategoryBook": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "default": "Hanh dong"
+        },
+        "description": {
+          "type": "string",
+          "default": "Gioi thieu ve sach"
+        },
+        "Images": {
+          "type": "string",
+          "default": "https://znews-photo.zingcdn.me/w480/Uploaded/mfnuy/2023_03_25/z.jpg"
+        }
+      }
+    }
+  }
+}
