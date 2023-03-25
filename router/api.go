@@ -28,8 +28,11 @@ func (api *API) SetupRouter() {
 
 	categoryBook := user.Group("/category-book")
 	categoryBook.POST("/save", api.CategoryBookController.SaveCategoryBook, middleware.JWTMiddleware())
+	categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
+	categoryBook.GET("/all", api.CategoryBookController.GetAllCategoryBook)
 
 	///pi.Echo.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	url := echoSwagger.URL("https://nhatbien.github.io/doc.json") //The url pointing to API definition
 	api.Echo.GET("/swagger/*", echoSwagger.EchoWrapHandler(url))
 }

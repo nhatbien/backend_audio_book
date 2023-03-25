@@ -29,3 +29,27 @@ func (n *CategoryBookRepoImpl) SaveCategory(category model.BookCategory) (model.
 	return category, nil
 
 }
+
+func (n *CategoryBookRepoImpl) UpdateCategory(category model.BookCategory) (model.BookCategory, error) {
+
+	if count := n.sql.Db.Where(&model.BookCategory{Id: category.Id}).First(new(model.BookCategory)).RowsAffected; count <= 0 {
+		return category, biedeptrai.ErrorCategoryNotFound
+	}
+
+	err := n.sql.Db.Updates(&category).Error
+
+	if err != nil {
+		return category, err
+	}
+	return category, nil
+
+}
+
+func (n *CategoryBookRepoImpl) SelectAllCategory() ([]model.BookCategory, error) {
+	var categories []model.BookCategory
+	err := n.sql.Db.Find(&categories).Error
+	if err != nil {
+		return categories, err
+	}
+	return categories, nil
+}
