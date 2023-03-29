@@ -1,0 +1,16 @@
+basePath: /
+host: localhost:3001
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server AudioBook server.
+  license:
+    name: Nginx
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: AudioBook Example API
+  version: 1.0.1
+paths: {}
+swagger: "2.0"

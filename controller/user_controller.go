@@ -2,6 +2,7 @@ package controller
 
 import (
 	"backend/biedeptrai"
+	_ "backend/docs"
 	"backend/log"
 	"backend/model"
 	"backend/model/request"
@@ -15,6 +16,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// GetByID godoc
+// @Summary Get BusinessGroup By ID
+// @Description Get BusinessGroup By ID
+// @Tags BusinessGroup
+// @Accept json
+// @Produce json
+// @Param id path int true "ID"
+// @Security ApiKeyAuth
+// @Header 200 {string} Token "qwerty"
+// @Success 200 {object} model.Response{data=model.User} "BusinessGroup Info"
+// @Failure 400,401,404 {object} ResponseError
+// @Failure 500 {object} ResponseError
+// @Router /business_groups/{id} [get]
 type UserController struct {
 	UserRepo repository.UserRepo
 }
@@ -133,7 +147,7 @@ func (u *UserController) Login(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  true,
-		Message: "Đăng nhập thành công",
+		Message: "success",
 		Data:    user,
 	})
 }
@@ -182,7 +196,8 @@ func (u *UserController) Update(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  true,
-		Message: "Lưu thành công",
+		Message: "success",
+		Data:    nil,
 	})
 }
 
@@ -191,7 +206,7 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 	tokenData := c.Get("user").(*jwt.Token)
 	claims := tokenData.Claims.(*model.JwtCustomClaims)
 
-	if claims.Role.RoleName != "ADMIN" {
+	if claims.Role.RoleName != "admin" {
 		return c.JSON(http.StatusNotFound, model.Response{
 			Status:  false,
 			Message: biedeptrai.ErrorRoleUser.Error(),
@@ -224,6 +239,40 @@ func (u *UserController) UpdateRole(c echo.Context) error {
 	} */
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  true,
-		Message: "Lưu thành công",
+		Message: "success",
+		Data:    nil,
+	})
+}
+
+// CreateUser ... Create User
+// @Summary      Show an account
+// @Description  get string by ID
+// @Tags         User
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Account ID"
+// @Success      200  {object}  model.User
+// @Failure      400  {object}  httputil.HTTPError
+// @Failure      404  {object}  httputil.HTTPError
+// @Failure      500  {object}  httputil.HTTPError
+// @Router       /User/{id} [get]
+
+func (u *UserController) GetProfile(c echo.Context) error {
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+
+	user, err := u.UserRepo.SelectUserId(c.Request().Context(), claims.Id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "success",
+		Data:    user,
 	})
 }

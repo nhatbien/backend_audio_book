@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "openapi:v2": "file:///Users/bie/Project/Golang/Backend/backend_audio_book/docs/swagger.yaml"
+    }
+}

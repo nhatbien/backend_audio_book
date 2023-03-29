@@ -3,6 +3,8 @@ package main
 import (
 	"backend/controller"
 	"backend/db"
+	_ "backend/docs"
+
 	"backend/helper"
 	"backend/repository/repo_impl"
 	"backend/router"
@@ -11,6 +13,20 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// @title AudioBook Example API
+// @version 1.0.1
+// @description This is a sample server AudioBook server.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Nginx
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:3001
+// @BasePath /
 func main() {
 
 	sql := &db.Sql{
@@ -22,6 +38,7 @@ func main() {
 	}
 	sql.Connect()
 	e := echo.New()
+
 	e.Use(middleware.CORS())
 
 	structValidator := helper.NewStructValidaten()
@@ -40,6 +57,7 @@ func main() {
 	}
 
 	api.SetupRouter()
+	api.SetupSwagger()
 
 	e.Logger.Fatal(e.Start(":3001"))
 	//	defer sql.Close()

@@ -36,7 +36,7 @@ func (b *CategoryBookController) SaveCategoryBook(c echo.Context) error {
 	tokenData := c.Get("user").(*jwt.Token)
 	claims := tokenData.Claims.(*model.JwtCustomClaims)
 
-	if claims.Role.RoleName != "ADMIN" {
+	if claims.Role.RoleName != "admin" {
 		return c.JSON(http.StatusNotFound, model.Response{
 			Status:  false,
 			Message: biedeptrai.ErrorRoleUser.Error(),
@@ -58,6 +58,7 @@ func (b *CategoryBookController) SaveCategoryBook(c echo.Context) error {
 			Data:    nil,
 		})
 	}
+
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  true,
 		Message: "Lưu thành công",
@@ -86,7 +87,7 @@ func (b *CategoryBookController) UpdateCategoryBook(c echo.Context) error {
 	tokenData := c.Get("user").(*jwt.Token)
 	claims := tokenData.Claims.(*model.JwtCustomClaims)
 
-	if claims.Role.RoleName != "ADMIN" {
+	if claims.Role.RoleName != "admin" {
 		return c.JSON(http.StatusNotFound, model.Response{
 			Status:  false,
 			Message: biedeptrai.ErrorRoleUser.Error(),

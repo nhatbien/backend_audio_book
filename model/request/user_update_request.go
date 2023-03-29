@@ -1,13 +1,13 @@
 package request
 
 type UserUpdateRequest struct {
-	Username string `json:"username,omitempty" validate:"required"`
-	Email    string `json:"email,omitempty" `
-	Phone    string `json:"phone,omitempty" `
-	Photo    string `json:"photo,omitempty" `
-	Age      int    `json:"age,omitempty" `
-	Address  string `json:"address,omitempty" db:"address, omitempty"`
-	FullName string `json:"full_name,omitempty"`
-	Password string `json:"password,omitempty"`
-	Status   int    `json:"status,omitempty" `
+	Username string `json:"username" validate:"required"`
+	Email    string `json:"email" `
+	Phone    string `json:"phone" `
+	Photo    string `json:"photo" `
+	Age      int    `json:"age" `
+	Address  string `json:"address" db:"address, omitempty"`
+	FullName string `json:"full_name"`
+	Password string `json:"password"`
+	Status   int    `json:"status" `
 }

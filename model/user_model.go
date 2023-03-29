@@ -4,20 +4,20 @@ import "time"
 
 type User struct {
 	Id        string    `json:"-" gorm:"primaryKey" `
-	Username  string    `json:"username,omitempty"  gorm:"size:255;uniqueIndex" `
-	Email     string    `json:"email,omitempty"  gorm:"size:255;uniqueIndex"`
-	Phone     string    `json:"phone,omitempty"  gorm:"size:255;uniqueIndex" `
-	Password  string    `json:"password,omitempty" `
-	FullName  string    `json:"full_name,omitempty" `
-	Age       int       `json:"age,omitempty" `
-	Address   string    `json:"address,omitempty" `
-	Photo     string    `json:"photo,omitempty" `
-	Status    int       `json:"status,omitempty" `
-	RoleId    int       `json:"role_id,omitempty"   `
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	Role      Role      `json:"role,omitempty" gorm:"foreignKey:RoleId"`
-	Token     string    `json:"token,omitempty"  gorm:"-"`
+	Username  string    `json:"username"  gorm:"size:255;uniqueIndex" `
+	Email     string    `json:"email"  gorm:"size:255;uniqueIndex"`
+	Phone     string    `json:"phone"  gorm:"size:255;uniqueIndex" `
+	Password  string    `json:"password" `
+	FullName  string    `json:"full_name" `
+	Age       int       `json:"age" `
+	Address   string    `json:"address" `
+	Photo     string    `json:"photo" `
+	Status    int       `json:"status" `
+	RoleId    int       `json:"role_id"   `
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Role      Role      `json:"role" gorm:"foreignKey:RoleId"`
+	Token     string    `json:"token"  gorm:"-"`
 }
 
 type Error struct {
