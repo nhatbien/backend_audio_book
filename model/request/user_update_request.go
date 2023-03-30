@@ -1,7 +1,7 @@
 package request
 
 type UserUpdateRequest struct {
-	Username string `json:"username" validate:"required"`
+	Username string `json:"username"`
 	Email    string `json:"email" `
 	Phone    string `json:"phone" `
 	Photo    string `json:"photo" `

@@ -50,10 +50,14 @@ func main() {
 	categoryBookController := controller.CategoryBookController{
 		CategoryBookRepo: repo_impl.NewCategoryBookRepo(sql)}
 
+	bookController := controller.BookController{
+		BookRepo: repo_impl.NewBookRepo(sql)}
+
 	api := router.API{
 		Echo:                   e,
 		UserController:         userController,
 		CategoryBookController: categoryBookController,
+		BookController:         bookController,
 	}
 
 	api.SetupRouter()

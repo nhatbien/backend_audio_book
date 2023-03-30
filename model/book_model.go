@@ -1,22 +1,23 @@
 package model
 
+import "time"
+
 type Book struct {
 	Id           int            `json:"id" db:"id, omitempty"`
-	Title        string         `json:"title" db:"title, omitempty"`
+	BookName     string         `json:"title" db:"title, omitempty"`
 	Author       string         `json:"author" db:"author, omitempty"`
 	Content      string         `json:"content" db:"content, omitempty"`
 	Img          string         `json:"img" db:"img, omitempty"`
 	Audio        string         `json:"audio" db:"audio, omitempty"`
 	Price        int            `json:"price" db:"price, omitempty"`
-	Discount     int            `json:"discount" db:"discount, omitempty"`
 	IsHot        bool           `json:"is_hot" db:"is_hot, omitempty"`
 	IsNew        bool           `json:"is_new" db:"is_new, omitempty"`
 	IsBestSeller bool           `json:"is_best_seller" db:"is_best_seller, omitempty"`
 	IsSale       bool           `json:"is_sale" db:"is_sale, omitempty"`
 	IsFree       bool           `json:"is_free" db:"is_free, omitempty"`
 	Status       int            `json:"status" gorm:"default:0"`
-	CreatedAt    string         `json:"created_at" db:"created_at, omitempty"`
-	UpdatedAt    string         `json:"updated_at" db:"updated_at, omitempty"`
+	CreatedAt    time.Time      `json:"created_at" db:"created_at, omitempty"`
+	UpdatedAt    time.Time      `json:"updated_at" db:"updated_at, omitempty"`
 	BookCategory []BookCategory `json:"book_category" gorm:"many2many:meta_book_category;"`
 }
 
