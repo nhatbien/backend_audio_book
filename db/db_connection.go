@@ -57,7 +57,7 @@ func (s *Sql) Connect() {
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	fmt.Println("Connect ok")
-	//Migratsion(s.Db)
+	Migratsion(s.Db)
 
 	//defer sqlDB.Close()
 }
@@ -73,13 +73,13 @@ func Migratsion(s *gorm.DB) {
 	s.Migrator().DropTable(model.Role{})
 	*/
 	//s.Migrator().DropTable(model.Role{})
-	//s.Migrator().DropTable(model.User{})
+	s.Migrator().DropTable(model.Book{})
 
 	s.AutoMigrate(model.Role{})
 	s.AutoMigrate(model.User{})
 	s.AutoMigrate(model.Book{}, model.BookCategory{})
 
-	//s.AutoMigrate(model.Permission{})
+	s.AutoMigrate(model.Permission{})
 	initDataRole(s)
 }
 

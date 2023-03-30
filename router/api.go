@@ -66,7 +66,7 @@ func (api *API) SetupSwagger() {
 		Version:     "1.0.0",
 	})
 
-	r.AddSecurityAPIKey("Authorization", "Bearer Token", echoswagger.SecurityInHeader).
+	r.AddSecurityAPIKey("Authorization", "Bearer", echoswagger.SecurityInHeader).
 		SetRequestContentType("application/json", "application/x-www-form-urlencoded", "multipart/form-data").
 		SetScheme("http")
 

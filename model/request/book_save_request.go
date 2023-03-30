@@ -6,5 +6,5 @@ type BookSaveRequest struct {
 	Content  string `json:"content" validate:"required"`
 	Img      string `json:"img" validate:"required"`
 	Audio    string `json:"audio" `
-	Price    int    `json:"price" validate:"required"`
+	Price    int    `json:"price"`
 }
