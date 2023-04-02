@@ -155,6 +155,9 @@ func (u *UserController) Login(c echo.Context) error {
 func (u *UserController) Update(c echo.Context) error {
 	request := request.UserUpdateRequest{}
 
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
@@ -171,23 +174,18 @@ func (u *UserController) Update(c echo.Context) error {
 		})
 	}
 
-	tokenData := c.Get("user").(*jwt.Token)
-	claims := tokenData.Claims.(*model.JwtCustomClaims)
-
 	user := model.User{
 		Id:        claims.Id,
-		Username:  request.Username,
 		Email:     request.Email,
 		Phone:     request.Phone,
 		Photo:     request.Photo,
 		FullName:  request.FullName,
-		Status:    request.Status,
 		Age:       request.Age,
 		Address:   request.Address,
 		UpdatedAt: time.Now(),
 	}
 
-	_, err := u.UserRepo.UpdateUser(c.Request().Context(), user)
+	response, err := u.UserRepo.UpdateUser(c.Request().Context(), user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
@@ -197,7 +195,7 @@ func (u *UserController) Update(c echo.Context) error {
 	return c.JSON(http.StatusOK, model.Response{
 		Status:  true,
 		Message: "success",
-		Data:    nil,
+		Data:    response,
 	})
 }
 

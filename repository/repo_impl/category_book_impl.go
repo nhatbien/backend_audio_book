@@ -5,6 +5,8 @@ import (
 	"backend/db"
 	"backend/model"
 	"backend/repository"
+
+	"gorm.io/gorm/clause"
 )
 
 type CategoryBookRepoImpl struct {
@@ -52,4 +54,13 @@ func (n *CategoryBookRepoImpl) SelectAllCategory() ([]model.BookCategory, error)
 		return categories, err
 	}
 	return categories, nil
+}
+
+func (n *CategoryBookRepoImpl) SelectCategoryById(categoryId int) (model.BookCategory, error) {
+	var category model.BookCategory
+	err := n.sql.Db.Where("id = ?", categoryId).Preload(clause.Associations).First(&category).Error
+	if err != nil {
+		return category, err
+	}
+	return category, nil
 }

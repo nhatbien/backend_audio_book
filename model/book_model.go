@@ -18,7 +18,7 @@ type Book struct {
 	Status       int            `json:"status" gorm:"default:0"`
 	CreatedAt    time.Time      `json:"created_at" db:"created_at, omitempty"`
 	UpdatedAt    time.Time      `json:"updated_at" db:"updated_at, omitempty"`
-	BookCategory []BookCategory `json:"book_category" gorm:"many2many:meta_book_category;"`
+	BookCategory []BookCategory `json:"book_category,omitempty" gorm:"many2many:meta_book_category;"`
 }
 
 type AudioBookChapter struct {

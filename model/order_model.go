@@ -8,4 +8,5 @@ type Order struct {
 	TotalPrice int    `json:"total_price" db:"total_price, omitempty"`
 	CreatedAt  string `json:"created_at" db:"created_at, omitempty"`
 	UpdatedAt  string `json:"updated_at" db:"updated_at, omitempty"`
+	Status     int    `json:"status" db:"status, omitempty"`
 }

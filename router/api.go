@@ -37,13 +37,15 @@ func (api *API) SetupRouter() {
 		book := user.Group("/book")
 		{
 			book.POST("/save", api.BookController.SaveBook, middleware.JWTMiddleware())
-			//	book.POST("/:id/update", api.BookController.UpdateCategoryBook, middleware.JWTMiddleware())
+			book.POST("/:id/update", api.BookController.UpdateBook, middleware.JWTMiddleware())
+			book.GET("/:id", api.BookController.SelectBookById)
 			book.GET("/all", api.BookController.SelectAllBook)
 		}
 		categoryBook := user.Group("/category-book")
 		{
 			categoryBook.POST("/save", api.CategoryBookController.SaveCategoryBook, middleware.JWTMiddleware())
 			categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
+			categoryBook.GET("/:id", api.CategoryBookController.GetCategoryBookById)
 			categoryBook.GET("/all", api.CategoryBookController.GetAllCategoryBook)
 		}
 
@@ -79,11 +81,11 @@ func (api *API) SetupSwagger() {
 		user.POST("/signin", api.UserController.Login).
 			AddParamBody(&request.UserLoginRequest{}, "body", "user login", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: model.User{}}, nil)
-		user.POST("/update", api.UserController.Update).
+		user.POST("/update", api.UserController.Update, middleware.JWTMiddleware()).
 			SetSecurity("Authorization").
 			AddParamBody(&request.UserUpdateRequest{}, "body", "user update profile", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: []byte("null")}, nil)
-		user.POST("/update-role", api.UserController.UpdateRole).
+		user.POST("/update-role", api.UserController.UpdateRole, middleware.JWTMiddleware()).
 			SetSecurity("Authorization").
 			AddParamBody(&request.UserUpdateRoleRequest{}, "body", "user update role", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: []byte("null")}, nil)
@@ -106,6 +108,9 @@ func (api *API) SetupSwagger() {
 
 		categoryBook.GET("/all", api.CategoryBookController.GetAllCategoryBook).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.BookCategory{}}, nil)
+		categoryBook.GET("/:id", api.CategoryBookController.GetCategoryBookById).
+			AddParamPath("id", "id", "string").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.BookCategory{}}, nil)
 	}
 	book := r.Group("Book", "/api/v1/book")
 	{
@@ -113,6 +118,13 @@ func (api *API) SetupSwagger() {
 			SetSecurity("Authorization").
 			AddParamBody(&request.BookSaveRequest{}, "body", " book save ", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+
+		book.POST(":id/update", api.BookController.UpdateBook, middleware.JWTMiddleware()).
+			SetSecurity("Authorization").
+			AddParamPath("id", "id", "string").
+			AddParamBody(&request.BookUpdateRequest{}, "body", " book update", true).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+
 		/* categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware()).
 		SetSecurity("Authorization").
 		AddParamPath("id", "id", "string").
@@ -121,5 +133,7 @@ func (api *API) SetupSwagger() {
 		*/
 		book.GET("/all", api.BookController.SelectAllBook).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Book{}}, nil)
+		book.GET("/:id", api.BookController.SelectBookById).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
 	}
 }

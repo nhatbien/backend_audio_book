@@ -9,5 +9,5 @@ type CategoryBookRepo interface {
 	UpdateCategory(category model.BookCategory) (model.BookCategory, error)
 	//DeleteCategory(categoryId int) error
 	SelectAllCategory() ([]model.BookCategory, error)
-	//SelectCategoryById(categoryId int) (model.BookCategory, error)
+	SelectCategoryById(categoryId int) (model.BookCategory, error)
 }

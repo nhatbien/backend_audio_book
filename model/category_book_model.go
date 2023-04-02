@@ -5,5 +5,5 @@ type BookCategory struct {
 	Name        string `json:"name" gorm:"not null"`
 	Description string `json:"description" `
 	Images      string `json:"images" `
-	Book        []Book `json:"book" gorm:"many2many:user_emails;"`
+	Book        []Book `json:"book,omitempty" gorm:"many2many:meta_book_category;"`
 }

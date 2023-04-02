@@ -7,6 +7,7 @@ import (
 	"backend/model/request"
 	"backend/repository"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -69,7 +70,7 @@ func (b *BookController) SaveBook(c echo.Context) error {
 		Status:    1,
 	}
 
-	book, err := b.BookRepo.SaveBook(bookModel)
+	book, err := b.BookRepo.SaveBook(bookModel, request.BookCategory)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
@@ -87,6 +88,93 @@ func (b *BookController) SaveBook(c echo.Context) error {
 
 func (b *BookController) SelectAllBook(c echo.Context) error {
 	books, err := b.BookRepo.SelectAllBook()
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    books,
+	})
+}
+
+func (b *BookController) UpdateBook(c echo.Context) error {
+	request := request.BookUpdateRequest{}
+	idOrder, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	if err := c.Bind(&request); err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	if err := c.Validate(request); err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+	if claims.Role.RoleName != "admin" {
+		return c.JSON(http.StatusNotFound, model.Response{
+			Status:  false,
+			Message: biedeptrai.ErrorRoleUser.Error(),
+			Data:    nil,
+		})
+	}
+	bookModel := model.Book{
+		Id:        idOrder,
+		BookName:  request.BookName,
+		Author:    request.Author,
+		Price:     request.Price,
+		Content:   request.Content,
+		Img:       request.Img,
+		Audio:     request.Audio,
+		UpdatedAt: time.Now(),
+		Status:    1,
+	}
+
+	books, err := b.BookRepo.UpdateBook(bookModel, request.BookCategory)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    books,
+	})
+
+}
+
+func (b *BookController) SelectBookById(c echo.Context) error {
+	idOrder, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	books, err := b.BookRepo.SelectBookById(idOrder)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
