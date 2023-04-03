@@ -7,7 +7,7 @@ import (
 )
 
 type Book struct {
-	Id           uint            `gorm:"primarykey"`
+	ID           uint            `gorm:"primarykey"`
 	BookName     string          ``
 	Author       string          ``
 	Content      string          ``
