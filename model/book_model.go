@@ -7,22 +7,22 @@ import (
 )
 
 type Book struct {
-	Id           uint           `gorm:"primarykey"`
-	BookName     string         ``
-	Author       string         ``
-	Content      string         ``
-	Img          string         ``
-	Audio        string         ``
-	Price        float64        ``
-	IsHot        bool           ``
-	IsNew        bool           ``
-	IsBestSeller bool           ``
-	IsSale       bool           ``
-	IsFree       bool           ``
-	Status       int            ` gorm:"default:0"`
-	CreatedAt    time.Time      ``
-	UpdatedAt    time.Time      ``
-	BookCategory []BookCategory `json:"BookCategory,omitempty" gorm:"many2many:meta_book_category;"`
+	Id           uint            `gorm:"primarykey"`
+	BookName     string          ``
+	Author       string          ``
+	Content      string          ``
+	Img          string          ``
+	Audio        string          ``
+	Price        float64         ``
+	IsHot        bool            ``
+	IsNew        bool            ``
+	IsBestSeller bool            ``
+	IsSale       bool            ``
+	IsFree       bool            ``
+	Status       int             ` gorm:"default:0"`
+	CreatedAt    time.Time       ``
+	UpdatedAt    time.Time       ``
+	BookCategory []*BookCategory `json:"BookCategory,omitempty" gorm:"many2many:meta_book_category;"`
 }
 
 type AudioBookChapter struct {
