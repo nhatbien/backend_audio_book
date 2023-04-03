@@ -3,9 +3,9 @@ package model
 import "encoding/json"
 
 type Response struct {
-	Status  bool        `json:"status"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Status  bool        `json:"Status"`
+	Message string      `json:"Message"`
+	Data    interface{} `json:"Data"`
 } //@name Response
 type MyData struct {
 	Value string

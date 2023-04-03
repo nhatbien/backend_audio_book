@@ -8,7 +8,6 @@ import (
 	"backend/repository"
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -59,15 +58,13 @@ func (b *BookController) SaveBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		BookName:  request.BookName,
-		Author:    request.Author,
-		Price:     request.Price,
-		Content:   request.Content,
-		Img:       request.Img,
-		Audio:     request.Audio,
-		UpdatedAt: time.Now(),
-		CreatedAt: time.Now(),
-		Status:    1,
+		BookName: request.BookName,
+		Author:   request.Author,
+		Price:    request.Price,
+		Content:  request.Content,
+		Img:      request.Img,
+		Audio:    request.Audio,
+		Status:   1,
 	}
 
 	book, err := b.BookRepo.SaveBook(bookModel, request.BookCategory)
@@ -104,7 +101,7 @@ func (b *BookController) SelectAllBook(c echo.Context) error {
 
 func (b *BookController) UpdateBook(c echo.Context) error {
 	request := request.BookUpdateRequest{}
-	idOrder, err := strconv.Atoi(c.Param("id"))
+	bookId, err := strconv.ParseUint(c.Param("id"), 10, 0)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
@@ -138,15 +135,14 @@ func (b *BookController) UpdateBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		Id:        idOrder,
-		BookName:  request.BookName,
-		Author:    request.Author,
-		Price:     request.Price,
-		Content:   request.Content,
-		Img:       request.Img,
-		Audio:     request.Audio,
-		UpdatedAt: time.Now(),
-		Status:    1,
+		Id:       uint(bookId),
+		BookName: request.BookName,
+		Author:   request.Author,
+		Price:    request.Price,
+		Content:  request.Content,
+		Img:      request.Img,
+		Audio:    request.Audio,
+		Status:   1,
 	}
 
 	books, err := b.BookRepo.UpdateBook(bookModel, request.BookCategory)

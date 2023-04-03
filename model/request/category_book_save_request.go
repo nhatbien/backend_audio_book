@@ -1,7 +1,7 @@
 package request
 
 type CategoryBookSave struct {
-	Name        string `json:"name"  validate:"required"`
-	Description string `json:"description" validate:"required"`
-	Images      string `json:"images" validate:"required"`
+	Name        string `  validate:"required"`
+	Description string ` validate:"required"`
+	Images      string ` validate:"required"`
 }

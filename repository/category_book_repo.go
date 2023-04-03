@@ -6,7 +6,7 @@ import (
 
 type CategoryBookRepo interface {
 	SaveCategory(category model.BookCategory) (model.BookCategory, error)
-	UpdateCategory(category model.BookCategory) (model.BookCategory, error)
+	UpdateCategory(category model.BookCategory, categoryId uint) (model.BookCategory, error)
 	//DeleteCategory(categoryId int) error
 	SelectAllCategory() ([]model.BookCategory, error)
 	SelectCategoryById(categoryId int) (model.BookCategory, error)

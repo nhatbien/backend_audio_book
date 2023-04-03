@@ -14,8 +14,8 @@ func (r Role) String() string {
 */
 type Role struct {
 	Id          uint64 `gorm:"primaryKey;autoIncrement"`
-	RoleName    string `json:"role_name"  gorm:"size:255;uniqueIndex"`
-	Description string `json:"role_description" `
+	RoleName    string `  gorm:"size:255;uniqueIndex"`
+	Description string ` `
 }
 
 type Permission struct {

@@ -94,7 +94,7 @@ func (b *CategoryBookController) UpdateCategoryBook(c echo.Context) error {
 			Data:    nil,
 		})
 	}
-	idOrder, err := strconv.Atoi(c.Param("id"))
+	idOrder, err := strconv.ParseUint(c.Param("id"), 10, 0)
 	if err != nil {
 		fmt.Println("Error parsing float:", err)
 		return c.JSON(http.StatusNotFound, model.Response{
@@ -105,13 +105,12 @@ func (b *CategoryBookController) UpdateCategoryBook(c echo.Context) error {
 	}
 
 	category := model.BookCategory{
-		Id:          idOrder,
 		Name:        request.Name,
 		Description: request.Description,
 		Images:      request.Images,
 	}
 
-	response, err := b.CategoryBookRepo.UpdateCategory(category)
+	response, err := b.CategoryBookRepo.UpdateCategory(category, uint(idOrder))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,

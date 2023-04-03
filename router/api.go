@@ -18,6 +18,7 @@ type API struct {
 	UserController         controller.UserController
 	CategoryBookController controller.CategoryBookController
 	BookController         controller.BookController
+	CartController         controller.CartController
 }
 
 func (api *API) SetupRouter() {
@@ -47,6 +48,14 @@ func (api *API) SetupRouter() {
 			categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 			categoryBook.GET("/:id", api.CategoryBookController.GetCategoryBookById)
 			categoryBook.GET("/all", api.CategoryBookController.GetAllCategoryBook)
+		}
+		cart := user.Group("/cart")
+		{
+			cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware())
+			cart.GET("", api.CartController.SelectMyCart, middleware.JWTMiddleware())
+
+			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
+			cart.GET("/:id", api.CategoryBookController.GetCategoryBookById)
 		}
 
 	}
@@ -119,7 +128,7 @@ func (api *API) SetupSwagger() {
 			AddParamBody(&request.BookSaveRequest{}, "body", " book save ", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
 
-		book.POST(":id/update", api.BookController.UpdateBook, middleware.JWTMiddleware()).
+		book.POST("/:id/update", api.BookController.UpdateBook, middleware.JWTMiddleware()).
 			SetSecurity("Authorization").
 			AddParamPath("id", "id", "string").
 			AddParamBody(&request.BookUpdateRequest{}, "body", " book update", true).
@@ -134,6 +143,16 @@ func (api *API) SetupSwagger() {
 		book.GET("/all", api.BookController.SelectAllBook).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Book{}}, nil)
 		book.GET("/:id", api.BookController.SelectBookById).
+			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+	}
+	cart := r.Group("Cart", "/api/v1/cart")
+	{
+		cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware()).
+			SetSecurity("Authorization").
+			AddParamBody(&request.CartItemSave{}, "body", "cart book update", true).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
+		cart.GET("/", api.CartController.SelectMyCart).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
 	}
 }

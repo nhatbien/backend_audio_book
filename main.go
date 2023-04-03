@@ -53,11 +53,15 @@ func main() {
 	bookController := controller.BookController{
 		BookRepo: repo_impl.NewBookRepo(sql)}
 
+	cartController := controller.CartController{
+		CartRepo: repo_impl.NewCartRepo(sql)}
+
 	api := router.API{
 		Echo:                   e,
 		UserController:         userController,
 		CategoryBookController: categoryBookController,
 		BookController:         bookController,
+		CartController:         cartController,
 	}
 
 	api.SetupRouter()

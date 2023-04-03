@@ -32,9 +32,9 @@ func (n *CategoryBookRepoImpl) SaveCategory(category model.BookCategory) (model.
 
 }
 
-func (n *CategoryBookRepoImpl) UpdateCategory(category model.BookCategory) (model.BookCategory, error) {
+func (n *CategoryBookRepoImpl) UpdateCategory(category model.BookCategory, categoryId uint) (model.BookCategory, error) {
 
-	if count := n.sql.Db.Where(&model.BookCategory{Id: category.Id}).First(new(model.BookCategory)).RowsAffected; count <= 0 {
+	if count := n.sql.Db.Where(&model.BookCategory{}, categoryId).First(new(model.BookCategory)).RowsAffected; count <= 0 {
 		return category, biedeptrai.ErrorCategoryNotFound
 	}
 

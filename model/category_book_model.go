@@ -1,9 +1,13 @@
 package model
 
+import "time"
+
 type BookCategory struct {
-	Id          int    `json:"id," gorm:"not null;primaryKey"`
-	Name        string `json:"name" gorm:"not null"`
-	Description string `json:"description" `
-	Images      string `json:"images" `
-	Book        []Book `json:"book,omitempty" gorm:"many2many:meta_book_category;"`
+	Id          uint   `gorm:"primarykey"`
+	Name        string ` gorm:"not null"`
+	Description string ` `
+	Images      string ` `
+	Book        []Book `json:"Book,omitempty" gorm:"many2many:meta_book_category;"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }

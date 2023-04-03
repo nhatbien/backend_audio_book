@@ -3,21 +3,21 @@ package model
 import "time"
 
 type User struct {
-	Id        string    `json:"-" gorm:"primaryKey" `
-	Username  string    `json:"username"  gorm:"size:255;uniqueIndex" `
-	Email     string    `json:"email"  gorm:"size:255;uniqueIndex"`
-	Phone     string    `json:"phone"  gorm:"size:255;uniqueIndex" `
-	Password  string    `json:"password" `
-	FullName  string    `json:"full_name" `
-	Age       int       `json:"age" `
-	Address   string    `json:"address" `
-	Photo     string    `json:"photo" `
-	Status    int       `json:"status" `
-	RoleId    int       `json:"role_id"   `
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
-	Role      Role      `json:"role" gorm:"foreignKey:RoleId"`
-	Token     string    `json:"token"  gorm:"-"`
+	Id        string    ` gorm:"primaryKey" `
+	Username  string    `  gorm:"size:255;uniqueIndex" `
+	Email     string    `  gorm:"size:255;uniqueIndex"`
+	Phone     string    `  gorm:"size:255;uniqueIndex" `
+	Password  string    ` `
+	FullName  string    ` `
+	Age       int       ` `
+	Address   string    ` `
+	Photo     string    ` `
+	Status    int       ` `
+	RoleId    int       `   `
+	CreatedAt time.Time ``
+	UpdatedAt time.Time ``
+	Role      Role      ` gorm:"foreignKey:RoleId"`
+	Token     string    `gorm:"-"`
 }
 
 type Error struct {
