@@ -22,7 +22,7 @@ type Book struct {
 	Status       int             ` gorm:"default:0"`
 	CreatedAt    time.Time       ``
 	UpdatedAt    time.Time       ``
-	BookCategory []*BookCategory `json:"BookCategory,omitempty" gorm:"many2many:meta_book_category;;ForeignKey:id,locale;References:id"`
+	BookCategory []*BookCategory `json:"BookCategory,omitempty" gorm:"many2many:meta_book_category;ForeignKey:id;References:id"`
 }
 
 type AudioBookChapter struct {
