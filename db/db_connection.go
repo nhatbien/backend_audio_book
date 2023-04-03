@@ -76,10 +76,9 @@ func Migratsion(s *gorm.DB) {
 
 	s.Migrator().DropTable(model.Book{}, model.BookCategory{})
 	s.Migrator().DropTable("meta_book_category")
-
 	s.Migrator().DropTable(model.CartItem{}, model.Cart{})
-	s.AutoMigrate(model.CartItem{}, model.Cart{})
 	s.AutoMigrate(model.Book{}, model.BookCategory{})
+	s.AutoMigrate(model.CartItem{}, model.Cart{})
 
 	/*
 		s.AutoMigrate(model.Role{})

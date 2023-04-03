@@ -52,6 +52,7 @@ func (api *API) SetupRouter() {
 		cart := user.Group("/cart")
 		{
 			cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware())
+			cart.GET("/", api.CartController.SelectMyCart, middleware.JWTMiddleware())
 			cart.GET("", api.CartController.SelectMyCart, middleware.JWTMiddleware())
 
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())

@@ -75,7 +75,7 @@ func (n *UserRepoImpl) UpdateUser(context context.Context, user model.User) (mod
 	userModel.Address = user.Address
 	userModel.UpdatedAt = time.Now()
 
-	if res := n.sql.Db.Save(&userModel).Error; res != nil {
+	if res := n.sql.Db.Updates(&userModel).Error; res != nil {
 		return user, res
 
 	}
