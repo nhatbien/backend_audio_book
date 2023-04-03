@@ -7,7 +7,7 @@ type BookCategory struct {
 	Name        string  ` gorm:"not null"`
 	Description string  ` `
 	Images      string  ` `
-	Book        []*Book `json:"Book,omitempty" gorm:"many2many:meta_book_category;"`
+	Book        []*Book `json:"Book,omitempty" gorm:"many2many:meta_book_category;ForeignKey:id;References:id"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
