@@ -135,7 +135,7 @@ func (b *BookController) UpdateBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		Id:       uint(bookId),
+		ID:       uint(bookId),
 		BookName: request.BookName,
 		Author:   request.Author,
 		Price:    request.Price,

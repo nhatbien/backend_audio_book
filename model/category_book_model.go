@@ -3,7 +3,7 @@ package model
 import "time"
 
 type BookCategory struct {
-	Id          uint    `gorm:"primarykey"`
+	ID          uint    `gorm:"primarykey"`
 	Name        string  ` gorm:"not null"`
 	Description string  ` `
 	Images      string  ` `

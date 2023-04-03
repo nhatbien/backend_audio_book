@@ -28,7 +28,7 @@ func (n *BookRepoImpl) SaveBook(book model.Book, category []int) (model.Book, er
 func (n *BookRepoImpl) UpdateBook(book model.Book, category []int) (model.Book, error) {
 	var categories []*model.BookCategory
 
-	if count := n.sql.Db.First(new(model.Book), book.Id).RowsAffected; count <= 0 {
+	if count := n.sql.Db.First(new(model.Book), book.ID).RowsAffected; count <= 0 {
 		return book, biedeptrai.ErrorBookNotFound
 	}
 	if count := n.sql.Db.Where("id IN (?)", category).Find(&categories).RowsAffected; count <= 0 {
