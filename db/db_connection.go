@@ -79,13 +79,11 @@ func Migratsion(s *gorm.DB) {
 	s.AutoMigrate(model.BookCategory{}, model.Book{})
 	s.AutoMigrate(model.CartItem{}, model.Cart{})
 
-	/*
-		s.AutoMigrate(model.Role{})
-		s.AutoMigrate(model.User{})
-		s.AutoMigrate(model.Book{}, model.BookCategory{})
+	s.AutoMigrate(model.Role{})
+	s.AutoMigrate(model.User{})
 
-		s.AutoMigrate(model.Permission{}) */
-	//initDataRole(s)
+	s.AutoMigrate(model.Permission{})
+	initDataRole(s)
 }
 
 func initDataRole(s *gorm.DB) {
