@@ -57,6 +57,53 @@ func (o *OrderController) SaveOrder(e echo.Context) error {
 	})
 
 }
+func (o *OrderController) PutOrderStatus(e echo.Context) error {
+	request := request.OrderStatusChange{}
+	id, err := strconv.Atoi(e.Param("id"))
+
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	if err := e.Bind(&request); err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+
+	}
+
+	if err := e.Validate(request); err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	order := model.Order{
+		Id:        uint(id),
+		UpdatedAt: time.Now(),
+		Status:    request.Status,
+	}
+	orders, err := o.OrderRepo.PutOrderStatus(order)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return e.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    orders,
+	})
+}
 
 func (o *OrderController) SelectOrderById(e echo.Context) error {
 	id, err := strconv.Atoi(e.Param("id"))

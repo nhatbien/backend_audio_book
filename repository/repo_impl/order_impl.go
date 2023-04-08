@@ -25,6 +25,22 @@ func (n *OrderRepoImpl) SaveOrder(order model.Order) (model.Order, error) {
 	return order, nil
 }
 
+func (n *OrderRepoImpl) PutOrderStatus(order model.Order) (model.Order, error) {
+	orderModel := model.Order{}
+	if n.sql.Db.Preload("Cart.Items.Book").First(&orderModel, order.Id).RowsAffected <= 0 {
+
+		return orderModel, biedeptrai.ErrOrderNotFound
+	}
+	orderModel.Status = order.Status
+	orderModel.UpdatedAt = order.UpdatedAt
+
+	err := n.sql.Db.Where(&model.Order{Id: order.Id}).Updates(&orderModel).Error
+	if err != nil {
+		return orderModel, err
+	}
+	return orderModel, nil
+}
+
 func (n *OrderRepoImpl) UpdateOrder(order model.Order) (model.Order, error) {
 	err := n.sql.Db.Updates(&order).Error
 	if err != nil {
