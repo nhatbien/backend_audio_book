@@ -2,23 +2,23 @@ package repo_impl
 
 import (
 	"backend/biedeptrai"
+	"backend/db"
 	"backend/model"
 	"backend/repository"
 
-	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type OrderRepoImpl struct {
-	Db *gorm.DB
+	sql *db.Sql
 }
 
-func NewOrderRepo(db *gorm.DB) repository.OrderRepo {
-	return &OrderRepoImpl{Db: db}
+func NewOrderRepo(sql *db.Sql) repository.OrderRepo {
+	return &OrderRepoImpl{sql: sql}
 }
 
 func (n *OrderRepoImpl) SaveOrder(order model.Order) (model.Order, error) {
-	err := n.Db.Create(&order).Error
+	err := n.sql.Db.Create(&order).Error
 	if err != nil {
 		return order, err
 	}
@@ -26,7 +26,7 @@ func (n *OrderRepoImpl) SaveOrder(order model.Order) (model.Order, error) {
 }
 
 func (n *OrderRepoImpl) UpdateOrder(order model.Order) (model.Order, error) {
-	err := n.Db.Updates(&order).Error
+	err := n.sql.Db.Updates(&order).Error
 	if err != nil {
 		return order, err
 	}
@@ -34,7 +34,7 @@ func (n *OrderRepoImpl) UpdateOrder(order model.Order) (model.Order, error) {
 }
 
 func (n *OrderRepoImpl) DeleteOrder(orderId uint) error {
-	err := n.Db.Delete(&model.Order{}, orderId).Error
+	err := n.sql.Db.Delete(&model.Order{}, orderId).Error
 	if err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (n *OrderRepoImpl) DeleteOrder(orderId uint) error {
 
 func (n *OrderRepoImpl) SelectAllOrder() ([]model.Order, error) {
 	var orders []model.Order
-	err := n.Db.Preload(clause.Associations).Find(&orders).Error
+	err := n.sql.Db.Preload(clause.Associations).Find(&orders).Error
 	if err != nil {
 		return orders, err
 	}
@@ -51,11 +51,11 @@ func (n *OrderRepoImpl) SelectAllOrder() ([]model.Order, error) {
 }
 
 func (n *OrderRepoImpl) SelectOrderById(orderId uint) (model.Order, error) {
-	if count := n.Db.First(new(model.Order), orderId).RowsAffected; count <= 0 {
+	if count := n.sql.Db.First(new(model.Order), orderId).RowsAffected; count <= 0 {
 		return model.Order{}, biedeptrai.ErrOrderNotFound
 	}
 	var order model.Order
-	err := n.Db.Preload(clause.Associations).First(&order, orderId).Error
+	err := n.sql.Db.Preload("Cart.Items.Book").First(&order, orderId).Error
 	if err != nil {
 		return order, err
 	}

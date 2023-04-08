@@ -5,6 +5,7 @@ import (
 	"backend/model/request"
 	"backend/repository"
 	"net/http"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -32,8 +33,10 @@ func (n *CartController) AddItemToCart(c echo.Context) error {
 		})
 	}
 	cartItem := model.CartItem{
-		BookId:   request.BookId,
-		Quantity: request.Quantity,
+		BookId:    request.BookId,
+		Quantity:  request.Quantity,
+		UpdatedAt: time.Now(),
+		CreatedAt: time.Now(),
 	}
 	tokenData := c.Get("user").(*jwt.Token)
 	claims := tokenData.Claims.(*model.JwtCustomClaims)

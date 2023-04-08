@@ -73,17 +73,17 @@ func Migratsion(s *gorm.DB) {
 	s.Migrator().DropTable(model.Role{})
 	*/
 	//s.Migrator().DropTable(model.Role{})
-	s.Migrator().DropTable("meta_book_category")
-	s.Migrator().DropTable(model.BookCategory{}, model.Book{})
-	s.Migrator().DropTable(model.CartItem{}, model.Cart{})
-	s.AutoMigrate(model.BookCategory{}, model.Book{})
-	s.AutoMigrate(model.CartItem{}, model.Cart{})
+	//s.Migrator().DropTable("meta_book_category")
+	//s.Migrator().DropTable(model.BookCategory{}, model.Book{})
+	//s.Migrator().DropTable(model.CartItem{}, model.Cart{})
+	//s.AutoMigrate(model.BookCategory{}, model.Book{})
+	//s.AutoMigrate(model.CartItem{}, model.Cart{})
 
-	s.AutoMigrate(model.Role{})
-	s.AutoMigrate(model.User{})
-
-	s.AutoMigrate(model.Permission{})
-	initDataRole(s)
+	//s.AutoMigrate(model.Role{})
+	//s.AutoMigrate(model.User{})
+	s.AutoMigrate(model.Order{})
+	//s.AutoMigrate(model.Permission{})
+	//initDataRole(s)
 }
 
 func initDataRole(s *gorm.DB) {

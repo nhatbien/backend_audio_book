@@ -5,6 +5,7 @@ import (
 	"backend/db"
 	"backend/model"
 	"backend/repository"
+	"time"
 
 	"gorm.io/gorm/clause"
 )
@@ -120,7 +121,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 	for _, item := range cart.Items {
 		cart.TotalPrice += item.TotalAmount
 	}
-
+	cart.UpdatedAt = time.Now()
 	if err := n.sql.Db.Updates(&cart).Error; err != nil {
 		return cart, err
 	}

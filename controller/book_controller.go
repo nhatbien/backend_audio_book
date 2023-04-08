@@ -8,6 +8,7 @@ import (
 	"backend/repository"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -58,13 +59,15 @@ func (b *BookController) SaveBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		BookName: request.BookName,
-		Author:   request.Author,
-		Price:    request.Price,
-		Content:  request.Content,
-		Img:      request.Img,
-		Audio:    request.Audio,
-		Status:   1,
+		BookName:  request.BookName,
+		Author:    request.Author,
+		Price:     request.Price,
+		Content:   request.Content,
+		Img:       request.Img,
+		Audio:     request.Audio,
+		Status:    1,
+		UpdatedAt: time.Now(),
+		CreatedAt: time.Now(),
 	}
 
 	book, err := b.BookRepo.SaveBook(bookModel, request.BookCategory)
@@ -135,14 +138,16 @@ func (b *BookController) UpdateBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		ID:       uint(bookId),
-		BookName: request.BookName,
-		Author:   request.Author,
-		Price:    request.Price,
-		Content:  request.Content,
-		Img:      request.Img,
-		Audio:    request.Audio,
-		Status:   1,
+		ID:        uint(bookId),
+		BookName:  request.BookName,
+		Author:    request.Author,
+		Price:     request.Price,
+		Content:   request.Content,
+		Img:       request.Img,
+		Audio:     request.Audio,
+		Status:    1,
+		UpdatedAt: time.Now(),
+		CreatedAt: time.Now(),
 	}
 
 	books, err := b.BookRepo.UpdateBook(bookModel, request.BookCategory)

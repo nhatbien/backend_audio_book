@@ -55,6 +55,8 @@ func main() {
 
 	cartController := controller.CartController{
 		CartRepo: repo_impl.NewCartRepo(sql)}
+	orderController := controller.OrderController{
+		OrderRepo: repo_impl.NewOrderRepo(sql)}
 
 	api := router.API{
 		Echo:                   e,
@@ -62,6 +64,7 @@ func main() {
 		CategoryBookController: categoryBookController,
 		BookController:         bookController,
 		CartController:         cartController,
+		OrderController:        orderController,
 	}
 
 	api.SetupRouter()

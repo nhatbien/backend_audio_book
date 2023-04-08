@@ -5,3 +5,8 @@ type CategoryBookSave struct {
 	Description string ` validate:"required"`
 	Images      string ` validate:"required"`
 }
+type CategoryBookUpdate struct {
+	Name        string `  `
+	Description string ` `
+	Images      string ``
+}

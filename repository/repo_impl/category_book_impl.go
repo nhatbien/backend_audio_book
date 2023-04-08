@@ -5,6 +5,7 @@ import (
 	"backend/db"
 	"backend/model"
 	"backend/repository"
+	"time"
 
 	"gorm.io/gorm/clause"
 )
@@ -34,11 +35,14 @@ func (n *CategoryBookRepoImpl) SaveCategory(category model.BookCategory) (model.
 
 func (n *CategoryBookRepoImpl) UpdateCategory(category model.BookCategory, categoryId uint) (model.BookCategory, error) {
 
-	if count := n.sql.Db.Where(&model.BookCategory{}, categoryId).First(new(model.BookCategory)).RowsAffected; count <= 0 {
+	if count := n.sql.Db.Where(&model.BookCategory{ID: categoryId}).First(new(model.BookCategory)).RowsAffected; count <= 0 {
 		return category, biedeptrai.ErrorCategoryNotFound
 	}
-
-	err := n.sql.Db.Updates(&category).Error
+	if count := n.sql.Db.Where(&model.BookCategory{Name: category.Name}).First(new(model.BookCategory)).RowsAffected; count > 0 {
+		return category, biedeptrai.ErrorCategoryConflict
+	}
+	category.UpdatedAt = time.Now()
+	err := n.sql.Db.Where(&model.BookCategory{ID: categoryId}).Updates(category).Error
 
 	if err != nil {
 		return category, err

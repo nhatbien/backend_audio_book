@@ -183,6 +183,7 @@ func (u *UserController) Update(c echo.Context) error {
 		Age:       request.Age,
 		Address:   request.Address,
 		UpdatedAt: time.Now(),
+		CreatedAt: time.Now(),
 	}
 
 	response, err := u.UserRepo.UpdateUser(c.Request().Context(), user)

@@ -19,6 +19,7 @@ type API struct {
 	CategoryBookController controller.CategoryBookController
 	BookController         controller.BookController
 	CartController         controller.CartController
+	OrderController        controller.OrderController
 }
 
 func (api *API) SetupRouter() {
@@ -57,6 +58,13 @@ func (api *API) SetupRouter() {
 
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 			cart.GET("/:id", api.CategoryBookController.GetCategoryBookById)
+		}
+		order := user.Group("/order")
+		{
+			order.POST("/save", api.OrderController.SaveOrder, middleware.JWTMiddleware())
+			order.GET("/:id", api.OrderController.SelectOrderById)
+
+			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 		}
 
 	}
@@ -155,5 +163,16 @@ func (api *API) SetupSwagger() {
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
 		cart.GET("/", api.CartController.SelectMyCart).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
+	}
+
+	order := r.Group("Order", "/api/v1/order")
+	{
+		order.POST("/save", api.OrderController.SaveOrder, middleware.JWTMiddleware()).
+			SetSecurity("Authorization").
+			AddParamBody(&request.OrderSave{}, "body", "order save ", true).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Order{}}, nil)
+		order.GET("/:id", api.OrderController.SelectOrderById).
+			AddParamPath("id", "id", "string").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Order{}}, nil)
 	}
 }

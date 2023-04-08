@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -48,6 +49,8 @@ func (b *CategoryBookController) SaveCategoryBook(c echo.Context) error {
 		Name:        request.Name,
 		Description: request.Description,
 		Images:      request.Images,
+		UpdatedAt:   time.Now(),
+		CreatedAt:   time.Now(),
 	}
 
 	response, err := b.CategoryBookRepo.SaveCategory(category)
@@ -68,7 +71,7 @@ func (b *CategoryBookController) SaveCategoryBook(c echo.Context) error {
 }
 
 func (b *CategoryBookController) UpdateCategoryBook(c echo.Context) error {
-	request := request.CategoryBookSave{}
+	request := request.CategoryBookUpdate{}
 
 	if err := c.Bind(&request); err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
