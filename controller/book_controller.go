@@ -189,3 +189,36 @@ func (b *BookController) SelectBookById(c echo.Context) error {
 		Data:    books,
 	})
 }
+
+func (e *BookController) DeleteBook(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	tokenData := c.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+	if claims.Role.RoleName != "admin" {
+		return c.JSON(http.StatusNotFound, model.Response{
+			Status:  false,
+			Message: biedeptrai.ErrorRoleUser.Error(),
+			Data:    nil,
+		})
+	}
+	err = e.BookRepo.DeleteBook(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    nil,
+	})
+}

@@ -52,6 +52,19 @@ func (n *BookRepoImpl) UpdateBook(book model.Book, category []int) (model.Book, 
 }
 
 func (n *BookRepoImpl) DeleteBook(bookId int) error {
+	if count := n.sql.Db.Find(&model.Book{ID: uint(bookId)}).RowsAffected; count <= 0 {
+		return biedeptrai.ErrorBookNotFound
+	}
+
+	n.sql.Db.Find(&model.Book{ID: uint(bookId)}).Association("BookCategory").Clear()
+	n.sql.Db.Where("book_id = ?", bookId).Delete(&model.CartItem{})
+
+	/* err := n.sql.Db.Model(&model.CartItem{}).Where("book_id = ?", bookId).Delete(&model.CartItem{}).Error
+	if err != nil {
+		return err
+
+	} */
+
 	err := n.sql.Db.Where("id = ?", bookId).Delete(&model.Book{}).Error
 	if err != nil {
 		return err

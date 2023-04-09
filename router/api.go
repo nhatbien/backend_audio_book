@@ -41,6 +41,7 @@ func (api *API) SetupRouter() {
 			book.POST("/save", api.BookController.SaveBook, middleware.JWTMiddleware())
 			book.POST("/:id/update", api.BookController.UpdateBook, middleware.JWTMiddleware())
 			book.GET("/:id", api.BookController.SelectBookById)
+			book.DELETE("/:id", api.BookController.DeleteBook)
 			book.GET("/all", api.BookController.SelectAllBook)
 		}
 		categoryBook := user.Group("/category-book")
@@ -48,6 +49,7 @@ func (api *API) SetupRouter() {
 			categoryBook.POST("/save", api.CategoryBookController.SaveCategoryBook, middleware.JWTMiddleware())
 			categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 			categoryBook.GET("/:id", api.CategoryBookController.GetCategoryBookById)
+			categoryBook.DELETE("/:id", api.CategoryBookController.DeleteCategoryBook, middleware.JWTMiddleware())
 			categoryBook.GET("/all", api.CategoryBookController.GetAllCategoryBook)
 		}
 		cart := user.Group("/cart")
@@ -55,7 +57,6 @@ func (api *API) SetupRouter() {
 			cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware())
 			cart.GET("/", api.CartController.SelectMyCart, middleware.JWTMiddleware())
 			cart.GET("", api.CartController.SelectMyCart, middleware.JWTMiddleware())
-
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 			cart.GET("/:id", api.CategoryBookController.GetCategoryBookById)
 		}
@@ -130,6 +131,9 @@ func (api *API) SetupSwagger() {
 		categoryBook.GET("/:id", api.CategoryBookController.GetCategoryBookById).
 			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.BookCategory{}}, nil)
+		categoryBook.DELETE("/:id", api.CategoryBookController.DeleteCategoryBook, middleware.JWTMiddleware()).
+			AddParamPath("id", "id", "string").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.BookCategory{}}, nil)
 	}
 	book := r.Group("Book", "/api/v1/book")
 	{
@@ -153,6 +157,9 @@ func (api *API) SetupSwagger() {
 		book.GET("/all", api.BookController.SelectAllBook).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Book{}}, nil)
 		book.GET("/:id", api.BookController.SelectBookById).
+			AddParamPath("id", "id", "string").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+		book.DELETE("/:id", api.BookController.DeleteBook, middleware.JWTMiddleware()).
 			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
 	}

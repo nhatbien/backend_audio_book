@@ -68,3 +68,18 @@ func (n *CategoryBookRepoImpl) SelectCategoryById(categoryId int) (model.BookCat
 	}
 	return category, nil
 }
+
+func (n *CategoryBookRepoImpl) DeleteCategory(categoryId int) error {
+	if count := n.sql.Db.Where("id = ?", categoryId).First(new(model.BookCategory)).RowsAffected; count <= 0 {
+		return biedeptrai.ErrorCategoryNotFound
+	}
+	if count := n.sql.Db.Where("book_category_id = ?", categoryId).First(new(model.Book)).RowsAffected; count > 0 {
+		return biedeptrai.ErrorCategoryDeleteBook
+	}
+
+	err := n.sql.Db.Where("id = ?", categoryId).Delete(&model.BookCategory{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
