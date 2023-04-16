@@ -6,6 +6,7 @@ import (
 	"backend/model"
 	"backend/repository"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -82,23 +83,31 @@ func (n *BookRepoImpl) UpdateBook(book model.Book, category []int) (model.Book, 
 }
 
 func (n *BookRepoImpl) DeleteBook(bookId int) error {
-	if count := n.sql.Db.Find(&model.Book{ID: uint(bookId)}).RowsAffected; count <= 0 {
+	book := []model.Book{}
+
+	if count := n.sql.Db.Where("id = ?", uint(bookId)).Find(&book).RowsAffected; count <= 0 {
 		return biedeptrai.ErrorBookNotFound
 	}
 
-	n.sql.Db.Find(&model.Book{ID: uint(bookId)}).Association("BookCategory").Clear()
-	n.sql.Db.Where("book_id = ?", bookId).Delete(&model.CartItem{})
+	err := n.sql.Db.Transaction(func(tx *gorm.DB) error {
+		if err := n.sql.Db.Exec("DELETE FROM `cart_items` WHERE `book_id` = ?", uint(bookId)).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("DELETE FROM `meta_book_category` WHERE `book_id` = ?", uint(bookId)).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("DELETE FROM `books` WHERE `id` = ?", uint(bookId)).Error; err != nil {
+			return err
+		}
 
-	/* err := n.sql.Db.Model(&model.CartItem{}).Where("book_id = ?", bookId).Delete(&model.CartItem{}).Error
+		return nil
+	})
+
 	if err != nil {
 		return err
 
-	} */
-
-	err := n.sql.Db.Where("id = ?", bookId).Delete(&model.Book{}).Error
-	if err != nil {
-		return err
 	}
+
 	return nil
 }
 
