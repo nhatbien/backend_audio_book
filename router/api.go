@@ -43,6 +43,7 @@ func (api *API) SetupRouter() {
 			book.GET("/:id", api.BookController.SelectBookById)
 			book.DELETE("/:id", api.BookController.DeleteBook)
 			book.GET("/all", api.BookController.SelectAllBook)
+			book.GET("/search", api.BookController.SearchBookByName)
 		}
 		categoryBook := user.Group("/category-book")
 		{
@@ -159,9 +160,13 @@ func (api *API) SetupSwagger() {
 		book.GET("/:id", api.BookController.SelectBookById).
 			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+		book.GET("/search", api.BookController.SearchBookByName).
+			AddParamQuery("name", "name", "nameBoook", false).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
 		book.DELETE("/:id", api.BookController.DeleteBook, middleware.JWTMiddleware()).
 			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Book{}}, nil)
+
 	}
 	cart := r.Group("Cart", "/api/v1/cart")
 	{

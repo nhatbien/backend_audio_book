@@ -59,18 +59,19 @@ func (b *BookController) SaveBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		BookName:  request.BookName,
-		Author:    request.Author,
-		Price:     request.Price,
-		Content:   request.Content,
-		Img:       request.Img,
-		Audio:     request.Audio,
-		Status:    1,
-		UpdatedAt: time.Now(),
-		CreatedAt: time.Now(),
+		BookName:     request.BookName,
+		Author:       request.Author,
+		Price:        request.Price,
+		Content:      request.Content,
+		Img:          request.Img,
+		Audio:        request.Audio,
+		Status:       1,
+		BookCategory: request.BookCategory,
+		UpdatedAt:    time.Now(),
+		CreatedAt:    time.Now(),
 	}
 
-	book, err := b.BookRepo.SaveBook(bookModel, request.BookCategory)
+	book, err := b.BookRepo.SaveBook(bookModel)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, model.Response{
 			Status:  false,
@@ -220,5 +221,22 @@ func (e *BookController) DeleteBook(c echo.Context) error {
 		Status:  true,
 		Message: "Thành công",
 		Data:    nil,
+	})
+}
+
+func (b *BookController) SearchBookByName(c echo.Context) error {
+	bookName := c.QueryParam("name")
+	books, err := b.BookRepo.SearchBookByName(bookName)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    books,
 	})
 }
