@@ -8,6 +8,5 @@ type CartRepo interface {
 	DeleteCart(cartId int) error
 	SelectCartById(cartId int) (model.Cart, error)
 	SelectMyCart(userID string) (model.Cart, error)
-
 	AddItemToCart(userID string, cartItem model.CartItem) (model.Cart, error)
 }

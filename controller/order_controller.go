@@ -128,3 +128,27 @@ func (o *OrderController) SelectOrderById(e echo.Context) error {
 		Data:    order,
 	})
 }
+
+func (o *OrderController) SelectOrderByStatus(e echo.Context) error {
+	id, err := strconv.Atoi(e.Param("status"))
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	orders, err := o.OrderRepo.SelectOrderByStatus(id)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return e.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    orders,
+	})
+}

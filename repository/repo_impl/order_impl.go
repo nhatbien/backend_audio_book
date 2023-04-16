@@ -77,3 +77,12 @@ func (n *OrderRepoImpl) SelectOrderById(orderId uint) (model.Order, error) {
 	}
 	return order, nil
 }
+
+func (n *OrderRepoImpl) SelectOrderByStatus(status int) ([]model.Order, error) {
+	var orders []model.Order
+	err := n.sql.Db.Where(&model.Order{Status: status}).Preload("Cart.Items.Book").Find(&orders).Error
+	if err != nil {
+		return orders, err
+	}
+	return orders, nil
+}

@@ -66,7 +66,7 @@ func (api *API) SetupRouter() {
 			order.POST("/save", api.OrderController.SaveOrder, middleware.JWTMiddleware())
 			order.GET("/:id", api.OrderController.SelectOrderById)
 			order.PUT(":id", api.OrderController.PutOrderStatus, middleware.JWTMiddleware())
-
+			order.GET("/status/:status", api.OrderController.SelectOrderByStatus, middleware.JWTMiddleware())
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 		}
 
@@ -174,7 +174,7 @@ func (api *API) SetupSwagger() {
 			SetSecurity("Authorization").
 			AddParamBody(&request.CartItemSave{}, "body", "cart book update", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
-		cart.GET("/", api.CartController.SelectMyCart).
+		cart.GET("/", api.CartController.SelectMyCart, middleware.JWTMiddleware()).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
 	}
 
@@ -189,7 +189,10 @@ func (api *API) SetupSwagger() {
 			AddParamBody(&request.OrderStatusChange{}, "body", "order put change status ", true).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Order{}}, nil)
 		order.GET("/:id", api.OrderController.SelectOrderById).
-			AddParamPath("id", "id", "string").
+			AddParamPath("id", "id", "int ID").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Order{}}, nil)
+		order.GET("/status/:status", api.OrderController.SelectOrderByStatus, middleware.JWTMiddleware()).
+			AddParamPath("status", "status", "int status").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Order{}}, nil)
 	}
 }

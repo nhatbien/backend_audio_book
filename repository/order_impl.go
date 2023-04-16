@@ -9,4 +9,5 @@ type OrderRepo interface {
 	DeleteOrder(orderId uint) error
 	SelectAllOrder() ([]model.Order, error)
 	SelectOrderById(orderId uint) (model.Order, error)
+	SelectOrderByStatus(status int) ([]model.Order, error)
 }
