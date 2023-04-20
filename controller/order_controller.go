@@ -152,3 +152,30 @@ func (o *OrderController) SelectOrderByStatus(e echo.Context) error {
 		Data:    orders,
 	})
 }
+
+func (o *OrderController) SelectOrderbyStatusAndUserId(e echo.Context) error {
+	tokenData := e.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+	id, err := strconv.Atoi(e.Param("status"))
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	orders, err := o.OrderRepo.SelectOrderbyStatusAndUserId(claims.Id, id)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return e.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    orders,
+	})
+}

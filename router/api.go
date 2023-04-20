@@ -68,6 +68,7 @@ func (api *API) SetupRouter() {
 			order.GET("/:id", api.OrderController.SelectOrderById)
 			order.PUT(":id", api.OrderController.PutOrderStatus, middleware.JWTMiddleware())
 			order.GET("/status/:status", api.OrderController.SelectOrderByStatus, middleware.JWTMiddleware())
+			order.GET("/get/:status", api.OrderController.SelectOrderbyStatusAndUserId, middleware.JWTMiddleware())
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
 		}
 
@@ -198,5 +199,8 @@ func (api *API) SetupSwagger() {
 		order.GET("/status/:status", api.OrderController.SelectOrderByStatus, middleware.JWTMiddleware()).
 			AddParamPath("status", "status", "int status").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Order{}}, nil)
+		order.GET("/get/:status", api.OrderController.SelectOrderbyStatusAndUserId, middleware.JWTMiddleware()).
+			AddParamPath("status", "status", "int status").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &[]model.Book{}}, nil)
 	}
 }

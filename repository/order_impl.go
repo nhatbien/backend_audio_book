@@ -10,4 +10,5 @@ type OrderRepo interface {
 	SelectAllOrder() ([]model.Order, error)
 	SelectOrderById(orderId uint) (model.Order, error)
 	SelectOrderByStatus(status int) ([]model.Order, error)
+	SelectOrderbyStatusAndUserId(userId string, status int) ([]model.Book, error)
 }

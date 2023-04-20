@@ -86,3 +86,21 @@ func (n *OrderRepoImpl) SelectOrderByStatus(status int) ([]model.Order, error) {
 	}
 	return orders, nil
 }
+
+func (n *OrderRepoImpl) SelectOrderbyStatusAndUserId(userId string, status int) ([]model.Book, error) {
+	var orders []model.Order
+	var books []model.Book
+	err := n.sql.Db.Where(&model.Order{UserId: userId, Status: status}).Preload("Cart.Items.Book").Find(&orders).Error
+
+	if err != nil {
+		return books, err
+	}
+
+	for _, order := range orders {
+		for _, item := range order.Cart.Items {
+			books = append(books, item.Book)
+		}
+	}
+
+	return books, nil
+}
