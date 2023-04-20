@@ -57,6 +57,8 @@ func (api *API) SetupRouter() {
 		cart := user.Group("/cart")
 		{
 			cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware())
+			cart.DELETE("/:id", api.CartController.DeleteCartItem, middleware.JWTMiddleware())
+			cart.DELETE("/delete", api.CartController.DeleteCart, middleware.JWTMiddleware())
 			cart.GET("/", api.CartController.SelectMyCart, middleware.JWTMiddleware())
 			cart.GET("", api.CartController.SelectMyCart, middleware.JWTMiddleware())
 			//categoryBook.POST("/:id/update", api.CategoryBookController.UpdateCategoryBook, middleware.JWTMiddleware())
@@ -178,6 +180,13 @@ func (api *API) SetupSwagger() {
 		cart.POST("/add", api.CartController.AddItemToCart, middleware.JWTMiddleware()).
 			SetSecurity("Authorization").
 			AddParamBody(&request.CartItemSave{}, "body", "cart book update", true).
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
+		cart.DELETE("/:id", api.CartController.DeleteCartItem, middleware.JWTMiddleware()).
+			SetSecurity("Authorization").
+			AddParamPath("id", "id", "id").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
+		cart.DELETE("/delete", api.CartController.DeleteCart, middleware.JWTMiddleware()).
+			SetSecurity("Authorization").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)
 		cart.GET("/", api.CartController.SelectMyCart, middleware.JWTMiddleware()).
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.Cart{}}, nil)

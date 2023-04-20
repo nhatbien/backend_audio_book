@@ -41,9 +41,9 @@ func (n *CartRepoImpl) UpdateCart(cart model.Cart) (model.Cart, error) {
 
 }
 
-func (n *CartRepoImpl) DeleteCart(cartId int) error {
+func (n *CartRepoImpl) DeleteCart(userId string) error {
 
-	err := n.sql.Db.Delete(&model.Cart{}, cartId).Error
+	err := n.sql.Db.Where("user_id = ?", userId).Delete(&model.Cart{}).Error
 
 	if err != nil {
 		return err
@@ -146,4 +146,10 @@ func (n *CartRepoImpl) SelectMyCart(userId string) (model.Cart, error) {
 	}
 	return cart, nil
 
+}
+func (n *CartRepoImpl) DeleteCartItem(cartItemId int) error {
+	if n.sql.Db.Delete(&model.CartItem{}, cartItemId).RowsAffected <= 0 {
+		return biedeptrai.ErrCartItemNotFound
+	}
+	return nil
 }
