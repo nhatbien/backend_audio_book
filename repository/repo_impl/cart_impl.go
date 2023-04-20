@@ -68,7 +68,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 		return cart, biedeptrai.ErrorUserNotFound
 	}
 
-	n.sql.Db.Transaction(func(tx *gorm.DB) error {
+	err := n.sql.Db.Transaction(func(tx *gorm.DB) error {
 		// do some database operations in the transaction (use 'tx' from this point, not 'db')
 
 		if tx.Where("user_id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
@@ -133,7 +133,9 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 		// return nil will commit the whole transaction
 		return nil
 	})
-
+	if err != nil {
+		return cart, err
+	}
 	return cart, nil
 }
 
