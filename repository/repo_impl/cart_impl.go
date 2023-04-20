@@ -86,6 +86,8 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 			return biedeptrai.ErrorBookNotFound
 		}
 		if tx.Where("book_id = ? AND cart_id = ?", cartItem.BookId, cart.Id).First(&cartItem).RowsAffected > 0 {
+			return biedeptrai.ErrorBookAlreadyInCart
+
 			cartItem.Quantity += 1
 			cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
 			if err := tx.Updates(&cartItem).Error; err != nil {
