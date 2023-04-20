@@ -76,7 +76,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 			cart = model.Cart{
 				UserId: userId,
 			}
-			err := n.sql.Db.Create(&cart).Error
+			err := tx.Create(&cart).Error
 			if err != nil {
 				return err
 			}
@@ -88,7 +88,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 		if tx.Where("book_id = ? AND cart_id = ?", cartItem.BookId, cart.Id).First(&cartItem).RowsAffected > 0 {
 			cartItem.Quantity += 1
 			cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
-			if err := n.sql.Db.Updates(&cartItem).Error; err != nil {
+			if err := tx.Updates(&cartItem).Error; err != nil {
 				return err
 			}
 			if tx.Preload(clause.Associations).First(&cart, cart.Id).RowsAffected <= 0 {
@@ -111,7 +111,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 
 		cartItem.CartId = cart.Id
 		cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
-		err := n.sql.Db.Create(&cartItem).Error
+		err := tx.Create(&cartItem).Error
 		if err != nil {
 			return err
 		}
@@ -137,7 +137,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 
 func (n *CartRepoImpl) SelectMyCart(userId string) (model.Cart, error) {
 	var cart model.Cart
-	if n.sql.Db.Where("user_id = ? AND is_current = ?", userId, true).Preload("Items.Book").Find(&cart).RowsAffected <= 0 {
+	if n.sql.Db.Where("user_id = ? AND is_current = ?", userId, 1).Preload("Items.Book").Find(&cart).RowsAffected <= 0 {
 		return cart, biedeptrai.ErrCartNotFound
 	}
 	return cart, nil
