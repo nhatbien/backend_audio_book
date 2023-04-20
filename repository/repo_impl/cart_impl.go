@@ -66,7 +66,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 	if n.sql.Db.Where("id = ?", userId).First(new(model.User)).RowsAffected <= 0 {
 		return cart, biedeptrai.ErrorUserNotFound
 	}
-	if n.sql.Db.Where("id = ? AND is_current = ?", userId, true).Preload("Items").First(&cart).RowsAffected <= 0 {
+	if n.sql.Db.Where("id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
 
 		cart = model.Cart{
 			UserId: userId,
