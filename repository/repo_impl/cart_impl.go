@@ -107,7 +107,6 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 				return biedeptrai.ErrCartNotFound
 			}
 
-			return nil
 		}
 
 		cartItem.CartId = cart.Id
