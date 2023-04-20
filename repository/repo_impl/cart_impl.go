@@ -71,7 +71,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 	n.sql.Db.Transaction(func(tx *gorm.DB) error {
 		// do some database operations in the transaction (use 'tx' from this point, not 'db')
 
-		if tx.Where("id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
+		if tx.Where("user_id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
 
 			cart = model.Cart{
 				UserId: userId,
