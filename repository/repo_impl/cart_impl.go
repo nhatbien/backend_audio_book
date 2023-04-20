@@ -137,7 +137,7 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 
 func (n *CartRepoImpl) SelectMyCart(userId string) (model.Cart, error) {
 	var cart model.Cart
-	if n.sql.Db.Where("user_id = ? AND is_current = ?", userId, 1).Preload("Items.Book").Find(&cart).RowsAffected <= 0 {
+	if n.sql.Db.Where("user_id = ? AND is_current = ?", userId, 1).Preload(clause.Associations).Preload("Items.Book").Find(&cart).RowsAffected <= 0 {
 		return cart, biedeptrai.ErrCartNotFound
 	}
 	return cart, nil
