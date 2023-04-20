@@ -17,7 +17,7 @@ type User struct {
 	CreatedAt time.Time ``
 	UpdatedAt time.Time ``
 	Role      Role      ` gorm:"foreignKey:RoleId"`
-	Token     string    `gorm:"-"`
+	Token     string    `json:"Token,omitempty" gorm:"-"`
 }
 
 type Error struct {

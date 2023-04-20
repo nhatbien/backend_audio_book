@@ -8,6 +8,8 @@ import (
 	"backend/repository"
 	"context"
 	"time"
+
+	"gorm.io/gorm/clause"
 )
 
 type UserRepoImpl struct {
@@ -49,7 +51,7 @@ func (n *UserRepoImpl) Login(context context.Context, loginRequest request.UserL
 
 func (n *UserRepoImpl) SelectUserId(context context.Context, userId string) (model.User, error) {
 	var user model.User
-	if res := n.sql.Db.Where(
+	if res := n.sql.Db.Preload(clause.Associations).Where(
 		&model.User{Id: userId},
 	).First(&user); res.RowsAffected <= 0 {
 		return user, biedeptrai.ErrorUserNotFound

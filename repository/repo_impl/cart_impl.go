@@ -7,6 +7,7 @@ import (
 	"backend/repository"
 	"time"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -66,65 +67,71 @@ func (n *CartRepoImpl) AddItemToCart(userId string, cartItem model.CartItem) (mo
 	if n.sql.Db.Where("id = ?", userId).First(new(model.User)).RowsAffected <= 0 {
 		return cart, biedeptrai.ErrorUserNotFound
 	}
-	if n.sql.Db.Where("id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
 
-		cart = model.Cart{
-			UserId: userId,
+	n.sql.Db.Transaction(func(tx *gorm.DB) error {
+		// do some database operations in the transaction (use 'tx' from this point, not 'db')
+
+		if tx.Where("id = ? AND is_current = ?", userId, 1).Preload("Items").First(&cart).RowsAffected <= 0 {
+
+			cart = model.Cart{
+				UserId: userId,
+			}
+			err := n.sql.Db.Create(&cart).Error
+			if err != nil {
+				return err
+			}
+
 		}
-		err := n.sql.Db.Create(&cart).Error
-		if err != nil {
-			return cart, err
+		if tx.First(&book, cartItem.BookId).RowsAffected <= 0 {
+			return biedeptrai.ErrorBookNotFound
+		}
+		if tx.Where("book_id = ? AND cart_id = ?", cartItem.BookId, cart.Id).First(&cartItem).RowsAffected > 0 {
+			cartItem.Quantity += 1
+			cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
+			if err := n.sql.Db.Updates(&cartItem).Error; err != nil {
+				return err
+			}
+			if tx.Preload(clause.Associations).First(&cart, cart.Id).RowsAffected <= 0 {
+
+				return biedeptrai.ErrCartNotFound
+			}
+			for _, item := range cart.Items {
+				cart.TotalPrice += item.TotalAmount
+			}
+			if err := tx.Updates(&cart).Error; err != nil {
+				return err
+			}
+
+			if tx.Preload("Items.Book").Find(&cart, cart.Id).RowsAffected <= 0 {
+
+				return biedeptrai.ErrCartNotFound
+			}
+
+			return nil
 		}
 
-	}
-	if n.sql.Db.First(&book, cartItem.BookId).RowsAffected <= 0 {
-		return cart, biedeptrai.ErrorBookNotFound
-	}
-
-	if n.sql.Db.Where("book_id = ? AND cart_id = ?", cartItem.BookId, cart.Id).First(&cartItem).RowsAffected > 0 {
-		cartItem.Quantity += 1
+		cartItem.CartId = cart.Id
 		cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
-		if err := n.sql.Db.Updates(&cartItem).Error; err != nil {
-			return cart, err
+		err := n.sql.Db.Create(&cartItem).Error
+		if err != nil {
+			return err
 		}
-		if n.sql.Db.Preload(clause.Associations).First(&cart, cart.Id).RowsAffected <= 0 {
 
-			return cart, biedeptrai.ErrCartNotFound
+		if tx.Preload("Items.Book").First(&cart, cart.Id).RowsAffected <= 0 {
+
+			return biedeptrai.ErrCartNotFound
 		}
+
 		for _, item := range cart.Items {
 			cart.TotalPrice += item.TotalAmount
 		}
-		if err := n.sql.Db.Updates(&cart).Error; err != nil {
-			return cart, err
+		cart.UpdatedAt = time.Now()
+		if err := tx.Updates(&cart).Error; err != nil {
+			return err
 		}
-
-		if n.sql.Db.Preload("Items.Book").Find(&cart, cart.Id).RowsAffected <= 0 {
-
-			return cart, biedeptrai.ErrCartNotFound
-		}
-
-		return cart, nil
-	}
-
-	cartItem.CartId = cart.Id
-	cartItem.TotalAmount = book.Price * float64(cartItem.Quantity)
-	err := n.sql.Db.Create(&cartItem).Error
-	if err != nil {
-		return cart, err
-	}
-
-	if n.sql.Db.Preload("Items.Book").First(&cart, cart.Id).RowsAffected <= 0 {
-
-		return cart, biedeptrai.ErrCartNotFound
-	}
-
-	for _, item := range cart.Items {
-		cart.TotalPrice += item.TotalAmount
-	}
-	cart.UpdatedAt = time.Now()
-	if err := n.sql.Db.Updates(&cart).Error; err != nil {
-		return cart, err
-	}
+		// return nil will commit the whole transaction
+		return nil
+	})
 
 	return cart, nil
 }

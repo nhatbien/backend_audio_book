@@ -34,6 +34,7 @@ func (api *API) SetupRouter() {
 			user.POST("/update", api.UserController.Update, middleware.JWTMiddleware())
 			user.POST("/update-role", api.UserController.UpdateRole, middleware.JWTMiddleware())
 			user.GET("/profile", api.UserController.GetProfile, middleware.JWTMiddleware())
+			user.GET("/:id", api.UserController.SelectUserId)
 		}
 		//user.GET("/profile", api.UserController.GetProfile, middleware.JWTMiddleware())
 		book := user.Group("/book")
@@ -113,6 +114,9 @@ func (api *API) SetupSwagger() {
 
 		user.GET("/profile", api.UserController.GetProfile, middleware.JWTMiddleware()).
 			SetSecurity("Authorization").
+			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.User{}}, nil)
+		user.GET("/:id", api.UserController.SelectUserId).
+			AddParamPath("id", "id", "string").
 			AddResponse(http.StatusOK, "success", &model.Response{Status: true, Message: "success", Data: &model.User{}}, nil)
 	}
 	categoryBook := r.Group("CategoryBook", "/api/v1/category-book")

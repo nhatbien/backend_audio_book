@@ -275,3 +275,22 @@ func (u *UserController) GetProfile(c echo.Context) error {
 		Data:    user,
 	})
 }
+
+func (u *UserController) SelectUserId(c echo.Context) error {
+	userId := c.Param("id")
+
+	user, err := u.UserRepo.SelectUserId(c.Request().Context(), userId)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "success",
+		Data:    user,
+	})
+}
