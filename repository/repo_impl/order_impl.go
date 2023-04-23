@@ -5,7 +5,9 @@ import (
 	"backend/db"
 	"backend/model"
 	"backend/repository"
+	"time"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -18,7 +20,25 @@ func NewOrderRepo(sql *db.Sql) repository.OrderRepo {
 }
 
 func (n *OrderRepoImpl) SaveOrder(order model.Order) (model.Order, error) {
-	err := n.sql.Db.Create(&order).Error
+	cartModel := model.Cart{}
+
+	err := n.sql.Db.Transaction(func(tx *gorm.DB) error {
+		if tx.First(&cartModel, order.CartId).RowsAffected <= 0 {
+			return biedeptrai.ErrCartNotFound
+		}
+		cartModel.IsCurrent = false
+		cartModel.UpdatedAt = time.Now()
+		if err := tx.Updates(&cartModel).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Create(&order).Error; err != nil {
+			return err
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		return order, err
 	}
