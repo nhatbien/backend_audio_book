@@ -81,6 +81,7 @@ func Migratsion(s *gorm.DB) {
 
 	//s.AutoMigrate(model.Role{})
 	//s.AutoMigrate(model.User{})
+	s.Migrator().DropTable(model.Order{})
 	s.AutoMigrate(model.Order{})
 	//s.AutoMigrate(model.Permission{})
 	//initDataRole(s)
