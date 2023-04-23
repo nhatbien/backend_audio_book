@@ -28,7 +28,12 @@ func (n *OrderRepoImpl) SaveOrder(order model.Order) (model.Order, error) {
 		}
 		cartModel.IsCurrent = false
 		cartModel.UpdatedAt = time.Now()
-		if err := tx.Updates(&cartModel).Error; err != nil {
+		if err := tx.Model(&cartModel).Updates(
+			map[string]interface{}{
+				"is_current": false,
+				"updated_at": time.Now(),
+			},
+		).Error; err != nil {
 			return err
 		}
 
