@@ -153,7 +153,34 @@ func (o *OrderController) SelectOrderByStatus(e echo.Context) error {
 	})
 }
 
-func (o *OrderController) SelectOrderbyStatusAndUserId(e echo.Context) error {
+func (o *OrderController) SelectAllBookOrderbyStatusAndUserId(e echo.Context) error {
+	tokenData := e.Get("user").(*jwt.Token)
+	claims := tokenData.Claims.(*model.JwtCustomClaims)
+	id, err := strconv.Atoi(e.Param("status"))
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	books, err := o.OrderRepo.SelectAllBookOrderbyStatusAndUserId(claims.Id, id)
+	if err != nil {
+		return e.JSON(http.StatusBadRequest, model.Response{
+			Status:  false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+	return e.JSON(http.StatusOK, model.Response{
+		Status:  true,
+		Message: "Thành công",
+		Data:    books,
+	})
+}
+
+func (o *OrderController) SelectAllOrderbyStatusAndUserId(e echo.Context) error {
 	tokenData := e.Get("user").(*jwt.Token)
 	claims := tokenData.Claims.(*model.JwtCustomClaims)
 	id, err := strconv.Atoi(e.Param("status"))

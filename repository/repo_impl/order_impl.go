@@ -112,7 +112,7 @@ func (n *OrderRepoImpl) SelectOrderByStatus(status int) ([]model.Order, error) {
 	return orders, nil
 }
 
-func (n *OrderRepoImpl) SelectOrderbyStatusAndUserId(userId string, status int) ([]model.Book, error) {
+func (n *OrderRepoImpl) SelectAllBookOrderbyStatusAndUserId(userId string, status int) ([]model.Book, error) {
 	var orders []model.Order
 	var books []model.Book
 	err := n.sql.Db.Where(&model.Order{UserId: userId, Status: status}).Preload("Cart.Items.Book").Find(&orders).Error
@@ -128,4 +128,12 @@ func (n *OrderRepoImpl) SelectOrderbyStatusAndUserId(userId string, status int) 
 	}
 
 	return books, nil
+}
+func (n *OrderRepoImpl) SelectOrderbyStatusAndUserId(userId string, status int) ([]model.Order, error) {
+	var orders []model.Order
+	err := n.sql.Db.Where(&model.Order{UserId: userId, Status: status}).Preload("Cart.Items.Book").Find(&orders).Error
+	if err != nil {
+		return orders, err
+	}
+	return orders, nil
 }

@@ -57,7 +57,7 @@ func (s *Sql) Connect() {
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	fmt.Println("Connect ok")
-	Migratsion(s.Db)
+	//Migratsion(s.Db)
 
 	//defer sqlDB.Close()
 }
