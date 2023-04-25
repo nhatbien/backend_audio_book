@@ -139,16 +139,17 @@ func (b *BookController) UpdateBook(c echo.Context) error {
 		})
 	}
 	bookModel := model.Book{
-		ID:        uint(bookId),
-		BookName:  request.BookName,
-		Author:    request.Author,
-		Price:     request.Price,
-		Content:   request.Content,
-		Img:       request.Img,
-		Audio:     request.Audio,
-		Status:    1,
-		UpdatedAt: time.Now(),
-		CreatedAt: time.Now(),
+		ID:           uint(bookId),
+		BookName:     request.BookName,
+		Author:       request.Author,
+		Price:        request.Price,
+		Content:      request.Content,
+		Img:          request.Img,
+		Audio:        request.Audio,
+		IsBestSeller: request.IsBestSeller,
+		Status:       1,
+		UpdatedAt:    time.Now(),
+		CreatedAt:    time.Now(),
 	}
 
 	books, err := b.BookRepo.UpdateBook(bookModel, request.BookCategory)
